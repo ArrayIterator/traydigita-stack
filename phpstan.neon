@@ -1,0 +1,28 @@
+parameters:
+    level: 8
+    paths:
+        - ./src/
+        - ./compat/
+    tmpDir: .tmp/phpstan
+    fileExtensions:
+        - php
+    parallel:
+        maximumNumberOfProcesses: 1
+    excludePaths:
+        - vendor/*
+        - node_modules/*
+        - tests/*
+        - release/*
+        - dist/*
+        - .tmp/*
+        - .temp/*
+    treatPhpDocTypesAsCertain: false
+    bootstrapFiles:
+        - ./.phpstan.php
+#    ignoreErrors:
+#    - '#Function [a-zA-Z0-9_\\]+ not found#'
+#    -
+#        identifier: missingType.iterableValue
+#    -
+#        identifier: missingType.generics
+
