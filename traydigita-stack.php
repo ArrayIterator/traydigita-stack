@@ -14,6 +14,7 @@
  * Requires at least: 6.0
  * Requires PHP: 8.3
  */
+
 if (!defined('ABSPATH')) {
     return;
 }
@@ -41,7 +42,8 @@ if (!defined('ABSPATH')) {
             }
             if (current_user_can('manage_options')) {
                 echo '<div class="notice notice-error"><p>';
-                echo esc_html__('TrayDigita Stack requires PHP version 8.3 or higher. Please update your PHP version.', 'traydigita-stack');
+                echo esc_html__('TrayDigita Stack requires PHP version 8.3 or higher. Please update your PHP version.',
+                    'traydigita-stack');
                 echo '</p></div>';
             }
         });
@@ -66,4 +68,19 @@ if (!defined('ABSPATH')) {
             }
         });
     }
+    // Register the update check hooks
+    add_action('plugins_loaded', function () {
+        if (class_exists(TrayDigita\WP\Stack\Source\UpdateCheck::class)) {
+            add_filter(
+                'pre_set_site_transient_update_plugins',
+                [TrayDigita\WP\Stack\Source\UpdateCheck::class, 'checkForUpdates']
+            );
+            add_filter(
+                'plugins_api',
+                [TrayDigita\WP\Stack\Source\UpdateCheck::class, 'pluginApiHooks'],
+                10,
+                3
+            );
+        }
+    });
 })();

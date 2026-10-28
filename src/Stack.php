@@ -37,6 +37,16 @@ use TrayDigita\WP\Stack\Source\Interfaces\Collections\SingletonInterface;
 final class Stack implements SingletonInterface
 {
     /**
+     * The version of the TrayDigita Stack.
+     */
+    public const string VERSION = '1.0.0';
+
+    /**
+     * Plugin name constant for TrayDigita Stack.
+     */
+    public const string PLUGIN_NAME = 'TrayDigita Stack';
+
+    /**
      * @var self
      */
     private static self $instance;

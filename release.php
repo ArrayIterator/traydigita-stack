@@ -228,7 +228,7 @@ declare(strict_types=1);
         error("RELEASE_VERSION environment variable is not set. Please set it to the desired release version.");
     }
     // remove v prefix if exists
-    $version = preg_replace('/^v[-_]?/i', '', $version);
+    $version = (string) preg_replace('/^v[-_]?/i', '', $version);
     // check if valid version of xx.xx.xx
     if (!preg_match('/^\d+\.\d+\.\d+$/', $version)) {
         error("Invalid version format: $version. Expected format: x.y.z (e.g., 1.0.0)");
