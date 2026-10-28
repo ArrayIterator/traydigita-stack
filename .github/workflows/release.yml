@@ -1,4 +1,4 @@
-name: Release Theme
+name: Release Plugin
 
 on:
   push:
