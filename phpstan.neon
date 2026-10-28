@@ -3,6 +3,7 @@ parameters:
     paths:
         - ./src/
         - ./compat/
+        - ./release.php
     tmpDir: .tmp/phpstan
     fileExtensions:
         - php

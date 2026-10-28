@@ -906,7 +906,7 @@ MYSQL,
         if (!$query) {
             return false;
         }
-        return $dbh->query($query, $result_mode)??false;
+        return $dbh->query($query, $result_mode)?:false;
     }
 
     /**

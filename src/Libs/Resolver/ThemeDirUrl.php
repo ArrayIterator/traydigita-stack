@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TrayDigita\WP\Stack\Source\Libs\Resolver;
 
-use TrayDigita\WP\Stack\Source\Libs\Helpers\Filter;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\DataFilter;
 use function get_stylesheet_directory_uri;
 use function get_template_directory;
 use function get_template_directory_uri;
@@ -31,7 +31,7 @@ class ThemeDirUrl
     ): string {
         if ($path === '' || $path === '/') {
             return $trailingSlash && !preg_match('~[?#]~', $uri)
-                ? Filter::trailingSlash($normalizedPath ? Filter::normalizePath($uri) : $uri)
+                ? DataFilter::trailingSlash($normalizedPath ? DataFilter::normalizePath($uri) : $uri)
                 : $uri;
         }
         if ($normalizedPath) {
@@ -39,19 +39,19 @@ class ThemeDirUrl
                 $path = preg_replace_callback(
                     '~^([^?#]*)([?#].*)$~',
                     function ($matches) {
-                        return Filter::normalizePath($matches[1]) . $matches[2];
+                        return DataFilter::normalizePath($matches[1]) . $matches[2];
                     },
                     $path
                 );
             } else {
-                $path = Filter::normalizePath($path);
+                $path = DataFilter::normalizePath($path);
             }
         }
         if (!preg_match('~[?#]~', $uri)) {
             if (!$path || !str_starts_with($path, '/')) {
                 $path = "/$path";
             }
-            $uri = Filter::removeTrailingSlash($uri);
+            $uri = DataFilter::removeTrailingSlash($uri);
         }
         return "$uri$path";
     }

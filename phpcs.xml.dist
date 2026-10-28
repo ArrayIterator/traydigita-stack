@@ -30,6 +30,7 @@
     <!-- Path To Check -->
     <file>src/</file> <!-- src folder -->
     <file>compat/</file> <!-- compat folder -->
+    <file>release.php</file> <!-- release file -->
     <!-- Exclude Pattern -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <!-- Slevomat Ruleset -->

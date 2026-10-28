@@ -26,7 +26,8 @@ use TrayDigita\WP\Stack\Source\Components\Networks\UserAgent;
 use TrayDigita\WP\Stack\Source\Components\Networks\UserAgentGenerator;
 use TrayDigita\WP\Stack\Source\Components\Provider\JetpackPhoton;
 use TrayDigita\WP\Stack\Source\Components\Security\Hash;
-use TrayDigita\WP\Stack\Source\Interfaces\Collections\RegistrySingletonInterface;
+use TrayDigita\WP\Stack\Source\Components\Utils\Filter;
+use TrayDigita\WP\Stack\Source\Components\Utils\Resolver;
 use TrayDigita\WP\Stack\Source\Libs\Collections\RegistryComponent;
 use TrayDigita\WP\Stack\Source\Libs\Collections\RegistryDefinitions\AutoWire;
 use TrayDigita\WP\Stack\Source\Libs\Collections\RegistryDefinitions\Reference;
@@ -35,12 +36,8 @@ use TrayDigita\WP\Stack\Source\Libs\Collections\RegistryDefinitions\Value;
 /**
  * @mixin RegistryComponent
  */
-final class Components implements RegistrySingletonInterface
+final class Components
 {
-    /**
-     * @var Components $instance The singleton instance of the Components class
-     */
-    private static Components $instance;
 
     /**
      * @var RegistryComponent $registry The registry instance used for managing components
@@ -50,7 +47,7 @@ final class Components implements RegistrySingletonInterface
     /**
      * @var class-string[] $componentClasses An array of component class names to be registered in the registry
      */
-    private const COMPONENT_CLASSES = [
+    private const array COMPONENT_CLASSES = [
         // Assets
         ManifestAssets::class,
 
@@ -74,8 +71,10 @@ final class Components implements RegistrySingletonInterface
 
         // Extensions
         Extensions::class,
+
         // Factory
         UserFactory::class,
+
         // Logger
         Logger::class,
         LogAware::class,
@@ -89,8 +88,14 @@ final class Components implements RegistrySingletonInterface
 
         // Provider
         JetpackPhoton::class,
+
         // Security
         Hash::class,
+
+        // Utils
+        Resolver::class,
+        Filter::class,
+        Resolver::class
     ];
 
     /**
@@ -98,7 +103,7 @@ final class Components implements RegistrySingletonInterface
      *
      * @return array<string, AutoWire|Value|callable|Reference> An associative array of component definitions
      */
-    private function definitions() : array
+    private function definitions(): array
     {
         $ref = [];
         foreach (self::COMPONENT_CLASSES as $class) {
@@ -117,9 +122,8 @@ final class Components implements RegistrySingletonInterface
      * Private constructor to prevent direct instantiation of the Components class.
      * Initializes the registry and sets the singleton instance.
      */
-    private function __construct()
+    public function __construct()
     {
-        self::$instance = $this;
         $this->registry = new RegistryComponent(
             $this->definitions(),
             true,
@@ -129,23 +133,13 @@ final class Components implements RegistrySingletonInterface
     }
 
     /**
-     * Retrieves the singleton instance of the Components class.
-     *
-     * @return Components
-     */
-    public static function getInstance(): Components
-    {
-        return self::$instance ??= new self();
-    }
-
-    /**
      * Retrieves the registry component instance.
      *
      * @return RegistryComponent
      */
-    public static function registry() : RegistryComponent
+    public function registry(): RegistryComponent
     {
-        return self::getInstance()->registry;
+        return $this->registry;
     }
 
     /**
@@ -157,10 +151,10 @@ final class Components implements RegistrySingletonInterface
      * @param mixed ...$args
      * @return T|null
      */
-    public static function make(string $className, ...$args): ?object
+    public function make(string $className, ...$args): ?object
     {
         try {
-            return self::registry()->make($className, ...$args);
+            return $this->registry()->make($className, ...$args);
         } catch (Throwable) {
             return null;
         }
@@ -174,10 +168,10 @@ final class Components implements RegistrySingletonInterface
      * @param class-string<T>|string $id
      * @return ($id is class-string<T> ? T : mixed)
      */
-    public static function get(string $id): mixed
+    public function get(string $id): mixed
     {
         try {
-            return self::registry()->get($id);
+            return $this->registry()->get($id);
         } catch (Throwable) {
             return null;
         }
@@ -189,9 +183,9 @@ final class Components implements RegistrySingletonInterface
      * @param string $id
      * @return bool
      */
-    public static function has(string $id): bool
+    public function has(string $id): bool
     {
-        return self::registry()->has($id);
+        return $this->registry()->has($id);
     }
 
     /**
@@ -203,10 +197,10 @@ final class Components implements RegistrySingletonInterface
      * @param bool $lock Whether to lock the value in the registry
      * @return Throwable|null null if successful, or the exception if an error occurs
      */
-    public static function set(string $id, mixed $value, bool $lock = false, bool $unlockable = true): ?Throwable
+    public function set(string $id, mixed $value, bool $lock = false, bool $unlockable = true): ?Throwable
     {
         try {
-            self::registry()->set($id, $value, $lock, $unlockable);
+            $this->registry()->set($id, $value, $lock, $unlockable);
             return null;
         } catch (Throwable $e) {
             return $e;
@@ -223,20 +217,7 @@ final class Components implements RegistrySingletonInterface
      */
     public function __call(string $name, array $arguments)
     {
-        return $this->registry->$name(...$arguments);
-    }
-
-    /**
-     * Magic method to handle static method calls on the Components class.
-     * It forwards the call to the registry instance.
-     *
-     * @param string $name The name of the method being called
-     * @param array<array-key, mixed> $arguments The arguments passed to the method
-     * @return mixed The result of the method call on the registry
-     */
-    public static function __callStatic(string $name, array $arguments)
-    {
-        return self::getInstance()->registry->$name(...$arguments);
+        return $this->registry()->$name(...$arguments);
     }
 
     /**
@@ -248,7 +229,7 @@ final class Components implements RegistrySingletonInterface
      */
     public function __get(string $name)
     {
-        return $this->registry->$name;
+        return $this->registry()->$name;
     }
 
     /**
@@ -260,6 +241,6 @@ final class Components implements RegistrySingletonInterface
      */
     public function __set(string $name, mixed $value): void
     {
-        $this->registry->$name = $value;
+        $this->registry()->$name = $value;
     }
 }

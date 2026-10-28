@@ -14,7 +14,7 @@ use TrayDigita\WP\Stack\Source\Interfaces\Data\UserFactoryInterface;
 use TrayDigita\WP\Stack\Source\Interfaces\Data\UserInterface;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\DatetimeImmutableUnit;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Duration;
-use TrayDigita\WP\Stack\Source\Libs\Helpers\Filter;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\DataFilter;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Random;
 use function bin2hex;
 use function hash_equals;
@@ -115,7 +115,7 @@ class StatelessAuthenticator
      */
     public function getUserAgent(): UserAgent
     {
-        return $this->userAgent ??= new UserAgent(Filter::removeMagicQuotes($_SERVER['HTTP_USER_AGENT'] ?? ''));
+        return $this->userAgent ??= new UserAgent(DataFilter::removeMagicQuotes($_SERVER['HTTP_USER_AGENT'] ?? ''));
     }
 
     /**

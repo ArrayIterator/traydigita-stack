@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace TrayDigita\WP\Stack\Source\Libs\Meta;
 
 use JsonSerializable;
-use TrayDigita\WP\Stack\Source\Libs\Helpers\Filter;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\DataFilter;
 use function array_values;
 use function get_bloginfo;
 use function is_string;
@@ -479,7 +479,7 @@ final class Manifest implements JsonSerializable
     public function setBackgroundColor(?string $background_color): self
     {
         if (is_string($background_color)) {
-            $hex = Filter::colorHex($background_color);
+            $hex = DataFilter::colorHex($background_color);
             if (!$hex) {
                 return $this;
             }
@@ -508,7 +508,7 @@ final class Manifest implements JsonSerializable
     public function setThemeColor(?string $theme_color): self
     {
         if (is_string($theme_color)) {
-            $hex = Filter::colorHex($theme_color);
+            $hex = DataFilter::colorHex($theme_color);
             if (!$hex) {
                 return $this;
             }

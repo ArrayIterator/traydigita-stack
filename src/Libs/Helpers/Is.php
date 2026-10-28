@@ -133,7 +133,7 @@ final class Is
      */
     public static function hex(mixed $data): bool
     {
-        return Filter::hex($data) !== null;
+        return DataFilter::hex($data) !== null;
     }
 
     /**
@@ -193,6 +193,10 @@ final class Is
      *
      * @param mixed $data The data to check.
      * @return bool True if the data is a valid Base64 encoded string, false otherwise.
+     * @phpstan-assert string $data
+     * @phpstan-return ($data is string ? true : false)
+     * @uses \is_string() to check if the data is a string.
+     * @uses \preg_match() to validate the Base64 format.
      */
     public static function isBase64(mixed $data): bool
     {
@@ -204,6 +208,10 @@ final class Is
      *
      * @param mixed $data The data to check.
      * @return bool True if the data is a valid Base32 encoded string, false otherwise.
+     * @phpstan-assert string $data
+     * @phpstan-return ($data is string ? true : false)
+     * @uses \is_string() to check if the data is a string.
+     * @uses \preg_match() to validate the Base32 format.
      */
     public static function isBase32(mixed $data): bool
     {
@@ -215,6 +223,10 @@ final class Is
      *
      * @param mixed $data The data to check.
      * @return bool True if the data is a valid Base64 encoded image string, false otherwise.
+     * @phpstan-assert string $data
+     * @phpstan-return ($data is string ? true : false)
+     * @uses \is_string() to check if the data is a string.
+     * @uses \preg_match() to validate the Base64 image format.
      */
     public static function isImageBase64(mixed $data): bool
     {
@@ -298,6 +310,11 @@ final class Is
      *
      * @param mixed $path The path to check.
      * @return bool True if the path is a stream, false otherwise.
+     * @phpstan-assert string|resource $path
+     * @phpstan-return ($path is string|resource ? true : false)
+     * @uses \is_resource() to check if the path is a resource.
+     * @uses \get_resource_type() to check if the resource is a stream.
+     * @uses \is_string() to check if the path is a string.
      */
     public static function stream(mixed $path): bool
     {
@@ -322,6 +339,7 @@ final class Is
      *
      * @param mixed $path The path to check.
      * @return bool True if the path is an absolute path, false otherwise.
+     * @phpstan-assert string $path
      */
     public static function absolutePath(mixed $path): bool
     {

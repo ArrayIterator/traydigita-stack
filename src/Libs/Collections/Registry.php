@@ -15,7 +15,7 @@ use TrayDigita\WP\Stack\Source\Interfaces\Collections\RegistryComponentInterface
 use TrayDigita\WP\Stack\Source\Interfaces\Collections\RegistryDefinitionInterface;
 use TrayDigita\WP\Stack\Source\Interfaces\Collections\RegistryInterface;
 use TrayDigita\WP\Stack\Source\Interfaces\Collections\RegistryNoChainingInterface;
-use TrayDigita\WP\Stack\Source\Interfaces\Collections\RegistrySingletonInterface;
+use TrayDigita\WP\Stack\Source\Interfaces\Collections\SingletonInterface;
 use TrayDigita\WP\Stack\Source\Interfaces\Exceptions\ExceptionInterface;
 use TrayDigita\WP\Stack\Source\Interfaces\Exceptions\IllegalOperationExceptionInterface;
 use TrayDigita\WP\Stack\Source\Interfaces\Exceptions\RegistryLockedExceptionInterface;
@@ -337,7 +337,7 @@ class Registry implements RegistryInterface
         try {
             $result = $this->registry[$id];
             if ((is_string($result) || is_object($result))
-                && is_a($result, RegistrySingletonInterface::class, true)
+                && is_a($result, SingletonInterface::class, true)
             ) {
                 $result = $result::getInstance();
             } elseif ($result instanceof Reference) {

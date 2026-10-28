@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace TrayDigita\WP\Stack\Source\Components\Data;
 
-use TrayDigita\WP\Stack\Source\Libs\Helpers\Filter;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\DataFilter;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Hook;
 use TrayDigita\WP\Stack\Source\Libs\Resolver\ThemeDirUrl;
 use WP_Theme;
@@ -203,7 +203,7 @@ class Site
      */
     public function setDistributionPath(string $distributionPath): void
     {
-        $distributionPath = Filter::normalizePath($distributionPath, true);
+        $distributionPath = DataFilter::normalizePath($distributionPath, true);
         if (!empty($distributionPath)) {
             $this->distributionPath = $distributionPath;
             $this->distributionDir = trailingslashit(ThemeDirUrl::templateDirectory($distributionPath . '/'));

@@ -271,6 +271,17 @@ class PostUtil
     }
 
     /**
+     * Check if the post is pending.
+     *
+     * @param mixed|WP_Post|int $post The post object or ID
+     * @return bool True if the post status is pending, false otherwise
+     */
+    public static function isPending(mixed $post): bool
+    {
+        return self::resolve($post)?->post_status === 'pending';
+    }
+
+    /**
      * Check if the post is a revision.
      *
      * @param mixed|WP_Post|int $post The post object or ID

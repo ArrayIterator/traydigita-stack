@@ -34,7 +34,7 @@ use function urlencode;
 /**
  * A utility class for filtering data.
  */
-final class Filter
+final class DataFilter
 {
     /**
      * @var array<string, string> Cache for normalized paths
@@ -189,6 +189,60 @@ final class Filter
                         ? '0'
                         : ($alpha === 1 ? '1' : sprintf('%.2f', $alpha));
                 })(substr($color, 6, 2))
+            )
+        };
+    }
+
+    /**
+     * Filter color to rgb
+     *
+     * @param mixed $color
+     * @return string|null
+     */
+    public static function rgbColor(mixed $color): ?string
+    {
+        if (!is_string($color)) {
+            return null;
+        }
+        $color = strtolower(trim($color));
+        if (str_contains($color, 'rgb')
+            && preg_match(
+                '/^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(?:\s*,\s*([0-9.]+))?\s*\)$/',
+                $color,
+                $matches
+            )
+        ) {
+            $r = (int)$matches[1];
+            $g = (int)$matches[2];
+            $b = (int)$matches[3];
+            if ($r > 255 || $g > 255 || $b > 255) {
+                return null;
+            }
+            return sprintf('rgb(%d, %d, %d)', $r, $g, $b);
+        }
+        if (str_starts_with($color, '#')) {
+            $color = substr($color, 1);
+        }
+        $length = strlen($color);
+        if ($length !== 3 && $length !== 6 && $length !== 8) {
+            return null;
+        }
+        if (!Ctype::xdigit($color)) {
+            return null;
+        }
+        $color = strtolower($color);
+        return match ($length) {
+            3 => sprintf(
+                'rgb(%d, %d, %d)',
+                hexdec($color[0] . $color[0]),
+                hexdec($color[1] . $color[1]),
+                hexdec($color[2] . $color[2])
+            ),
+            default => sprintf(
+                'rgb(%d, %d, %d)',
+                hexdec(substr($color, 0, 2)),
+                hexdec(substr($color, 2, 2)),
+                hexdec(substr($color, 4, 2))
             )
         };
     }

@@ -11,20 +11,59 @@
  * Author URI: https://www.traydigita.com
  * License: GPLv3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
+ * Requires at least: 6.0
+ * Requires PHP: 8.3
  */
 if (!defined('ABSPATH')) {
     return;
 }
 
-require __DIR__  .'/vendor/autoload.php';
+(function () {
 
-// check if using CLI and execute current script is in this directory
-if (in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
-    $scriptName = $_SERVER['SCRIPT_FILENAME']??$_SERVER['SCRIPT_NAME']??'';
-    if ($scriptName
-        && ($scriptName = realpath($scriptName))
-        && str_starts_with($scriptName, __DIR__)
-    ) {
-        return;
+    // check if using CLI and execute current script is in this directory
+    if (in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+        $scriptName = $_SERVER['SCRIPT_FILENAME'] ?? $_SERVER['SCRIPT_NAME'] ?? '';
+        if ($scriptName
+            && ($scriptName = realpath($scriptName))
+            && str_starts_with($scriptName, __DIR__)
+        ) {
+            return;
+        }
     }
-}
+
+    // check if PHP version is 8.3 or higher
+    if (version_compare(PHP_VERSION, '8.3.0', '<')) {
+        add_action('admin_notices', function () {
+            // check if plugin page
+            global $pagenow;
+            if ($pagenow !== 'plugins.php' && $pagenow !== 'update.php') {
+                return;
+            }
+            if (current_user_can('manage_options')) {
+                echo '<div class="notice notice-error"><p>';
+                echo esc_html__('TrayDigita Stack requires PHP version 8.3 or higher. Please update your PHP version.', 'traydigita-stack');
+                echo '</p></div>';
+            }
+        });
+        return; // Exit if PHP version is lower than 8.3
+    }
+
+
+    if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+        require __DIR__ . '/vendor/autoload.php';
+    } else {
+        spl_autoload_register(function ($class) {
+            $prefix = 'TrayDigita\\WP\\Stack\\Source\\';
+            $base_dir = __DIR__ . "/src/";
+            $len = strlen($prefix);
+            if (strncmp($prefix, $class, $len) !== 0) {
+                return;
+            }
+            $relative_class = substr($class, $len);
+            $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+            if (file_exists($file)) {
+                require $file;
+            }
+        });
+    }
+})();

@@ -7,7 +7,7 @@ use InvalidArgumentException;
 use Stringable;
 use Throwable;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\DatetimeImmutableUnit;
-use TrayDigita\WP\Stack\Source\Libs\Helpers\Filter;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\DataFilter;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Math;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Random;
 use function array_key_exists;
@@ -694,7 +694,7 @@ final class Uuid implements Stringable
                 $custom = bin2hex(Random::bytes(16));
             }
 
-            if (strlen($custom) !== 32 || !Filter::hex($custom)) {
+            if (strlen($custom) !== 32 || !DataFilter::hex($custom)) {
                 throw new InvalidArgumentException(
                     'UUID v8 custom data must be exactly 32 hexadecimal characters'
                 );
@@ -780,7 +780,7 @@ final class Uuid implements Stringable
             }
 
             if (strlen($hash) !== $expectedLength
-                || !Filter::hex($hash)
+                || !DataFilter::hex($hash)
             ) {
                 throw new InvalidArgumentException(
                     $type === self::UUID_TYPE_MD5

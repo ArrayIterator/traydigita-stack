@@ -197,7 +197,7 @@ final class RawParams
                 return self::$getParams = $getParams;
             }
         }
-        return self::$getParams ??= Filter::removeMagicQuotes($_GET);
+        return self::$getParams ??= DataFilter::removeMagicQuotes($_GET);
     }
 
     /**
@@ -224,7 +224,7 @@ final class RawParams
                 $wpUnfiltered = true;
                 return $_POST;
             }
-            return Filter::removeMagicQuotes($_POST);
+            return DataFilter::removeMagicQuotes($_POST);
         }
         if (defined('INPUT_POST')) {
             $postParams = self::filterOf(INPUT_POST);
@@ -241,7 +241,7 @@ final class RawParams
             // Return the raw $_POST data without filtering if the input size exceeds the maximum allowed size.
             return $_POST;
         }
-        return self::$postParams = Filter::removeMagicQuotes($_POST);
+        return self::$postParams = DataFilter::removeMagicQuotes($_POST);
     }
 
     /**
@@ -274,7 +274,7 @@ final class RawParams
                 return self::$cookieParams = $cookieParams;
             }
         }
-        return self::$cookieParams ??= Filter::removeMagicQuotes($_COOKIE);
+        return self::$cookieParams ??= DataFilter::removeMagicQuotes($_COOKIE);
     }
 
     /**
@@ -293,7 +293,7 @@ final class RawParams
                 return self::$serverParams = $serverParams;
             }
         }
-        return self::$serverParams ??= Filter::removeMagicQuotes($_SERVER);
+        return self::$serverParams ??= DataFilter::removeMagicQuotes($_SERVER);
     }
 
     /**

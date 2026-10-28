@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
+use ReturnTypeWillChange;
 use Stringable;
 use function function_exists;
 use function method_exists;
@@ -106,6 +107,7 @@ class DatetimeImmutableUnit extends DateTimeImmutable implements Stringable
      * @return self
      * @throws Exception
      */
+    #[ReturnTypeWillChange]
     public static function createFromMutable(DateTime $object): self
     {
         return static::wrap(parent::createFromMutable($object));

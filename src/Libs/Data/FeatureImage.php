@@ -8,7 +8,7 @@ use Serializable;
 use Stringable;
 use TrayDigita\WP\Stack\Source\Libs\Resolver\PostUtil;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Callback;
-use TrayDigita\WP\Stack\Source\Libs\Helpers\Filter;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\DataFilter;
 use WP_Post;
 use function _wp_get_attachment_relative_path;
 use function absint;
@@ -304,10 +304,10 @@ final class FeatureImage implements Stringable, ArrayAccess, Serializable
             $url = str_replace($uploads['basedir'], $uploads['baseurl'], $file);
         } elseif (str_contains($file, 'wp-content/uploads')) {
             $trail = _wp_get_attachment_relative_path($file);
-            $base = Filter::baseName($file);
-            $path = Filter::trailingSlash($uploads['basedir'] . '/' . $trail) . $base;
+            $base = DataFilter::baseName($file);
+            $path = DataFilter::trailingSlash($uploads['basedir'] . '/' . $trail) . $base;
             // Get the directory name relative to the basedir (back compat for pre-2.7 uploads).
-            $url = Filter::trailingSlash($uploads['baseurl'] . '/' . $trail) . $base;
+            $url = DataFilter::trailingSlash($uploads['baseurl'] . '/' . $trail) . $base;
         } else {
             // It's a newly-uploaded file, therefore $file is relative to the basedir.
             $url = $uploads['baseurl'] . "/$file";

@@ -105,12 +105,26 @@ final class User implements UserInterface
     public readonly bool $exists;
 
     /**
-     * @param WP_User|int|string|null $user WordPress user object
+     * @param WP_User|int|string|User|null $user WordPress user object
      */
     public function __construct(
         #[SensitiveParameter]
-        null|WP_User|int|string $user = null
+        null|WP_User|int|string|User $user = null
     ) {
+        if ($user instanceof User) {
+            $this->user = $user->user;
+            $this->url = $user->url;
+            $this->id = $user->id;
+            $this->username = $user->username;
+            $this->password = $user->password;
+            $this->nickname = $user->nickname;
+            $this->email = $user->email;
+            $this->registered = $user->registered;
+            $this->activationKey = $user->activationKey;
+            $this->displayName = $user->displayName;
+            $this->exists = $user->exists;
+            return;
+        }
         if (!$user instanceof WP_User) {
             $userdata = new stdClass();
             if ($user === null) {

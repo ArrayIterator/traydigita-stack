@@ -2,6 +2,7 @@
     "name": "traydigita/stack",
     "description": "Stack for WordPress theme development",
     "type": "wordpress-plugin",
+    "version": "1.0.0",
     "license": "GPL-3.0-or-later",
     "authors": [
         {
@@ -17,7 +18,7 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "psr/log": "^1.0.1 || ^2.0 || ^3.0",
         "psr/container": "^1 || ^2",
         "ext-mysqli": "*"
