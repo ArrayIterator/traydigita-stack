@@ -223,9 +223,15 @@ declare(strict_types=1);
     if (json_last_error() !== JSON_ERROR_NONE) {
         error("Failed to parse composer.json file: " . json_last_error_msg());
     }
-    $version = $composer['version'] ?? null;
+    $version = getenv('RELEASE_VERSION');
     if (!$version) {
-        error("Version is not defined in composer.json file.");
+        error("RELEASE_VERSION environment variable is not set. Please set it to the desired release version.");
+    }
+    // remove v prefix if exists
+    $version = preg_replace('/^v[-_]?/i', '', $version);
+    // check if valid version of xx.xx.xx
+    if (!preg_match('/^\d+\.\d+\.\d+$/', $version)) {
+        error("Invalid version format: $version. Expected format: x.y.z (e.g., 1.0.0)");
     }
     info("Release version: $version");
     info("Release zip file: $dirPlugin-$version.zip");
