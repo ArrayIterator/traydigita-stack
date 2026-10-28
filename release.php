@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 (function () {
     $phpVersionMin = '8.3.0';
-    $releaseDir = __DIR__ . DIRECTORY_SEPARATOR . 'release';
+    $releaseDir = __DIR__ . DIRECTORY_SEPARATOR . 'releases';
     $dirPlugin = 'traydigita-stack';
     $includes = [
         'src',
