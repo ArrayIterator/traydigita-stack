@@ -156,7 +156,7 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
      * @param-out bool $canBeSet
      * @return TValue
      */
-    protected function setupNewValue(string $name, mixed $value, mixed $oldValue, bool &$canBeSet = null): mixed
+    protected function setupNewValue(string $name, mixed $value, mixed $oldValue, ?bool &$canBeSet = null): mixed
     {
         $canBeSet = $value !== $oldValue && gettype($value) === gettype($oldValue);
         return $value;

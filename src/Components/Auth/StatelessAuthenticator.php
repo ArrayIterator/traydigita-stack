@@ -370,8 +370,8 @@ class StatelessAuthenticator
      */
     public function generate(
         string|int|UserInterface $user,
-        string|null $uri = null,
-        DateInterval|Duration $duration = null
+        ?string $uri = null,
+        DateInterval|Duration|null $duration = null
     ): AuthenticatorPayload {
         $userAgent = $this->getUserAgent();
         $user = $this->getUserFactory()->findOrEmpty($user);

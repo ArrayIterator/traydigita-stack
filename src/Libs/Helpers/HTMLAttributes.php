@@ -20,12 +20,12 @@ use function strtolower;
 use function substr;
 use function trim;
 
-final class Attributes
+final class HTMLAttributes
 {
     /**
      * @var array<string,string> HTML attributes list
      */
-    public const HTML_ATTRIBUTES = [
+    public const array HTML_ATTRIBUTES = [
         "accept" => "accept",
         "accept-charset" => "accept-charset",
         "accesskey" => "accesskey",

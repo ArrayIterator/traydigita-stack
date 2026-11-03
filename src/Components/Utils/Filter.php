@@ -6,7 +6,7 @@ namespace TrayDigita\WP\Stack\Source\Components\Utils;
 use ReflectionClass;
 use ReflectionObject;
 use Stringable;
-use TrayDigita\WP\Stack\Source\Libs\Helpers\Attributes;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\HTMLAttributes;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\DataFilter;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\OutputBuffer;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Reflections;
@@ -25,11 +25,11 @@ class Filter
      *
      * @param mixed ...$classes
      * @return array<string>
-     * @see Attributes::filterClass()
+     * @see HTMLAttributes::filterClass()
      */
     public function classNames(mixed ...$classes): array
     {
-        return Attributes::filterClass(...$classes);
+        return HTMLAttributes::filterClass(...$classes);
     }
 
     /**
@@ -40,7 +40,7 @@ class Filter
      */
     public function attributeKey(mixed $key): ?string
     {
-        return Attributes::sanitizeKeyAttribute($key);
+        return HTMLAttributes::sanitizeKeyAttribute($key);
     }
 
     /**
@@ -51,7 +51,7 @@ class Filter
      */
     public function attributes(array $attributes): string
     {
-        return Attributes::buildAttributes($attributes);
+        return HTMLAttributes::buildAttributes($attributes);
     }
 
     // FILTER

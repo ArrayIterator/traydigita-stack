@@ -329,11 +329,11 @@ final class Ip implements Stringable
         }
         $ip0 = ($ip_long) & ((-1 << (32 - $range)));
         $long_0 = long2ip($ip0);
-        if ($long_0 === false) {
+        if (!is_string($long_0)) { // @phpstan-ignore-line
             return null;
         }
         $long_1 = long2ip($ip0 + $pow - 1);
-        if ($long_1 === false) {
+        if (!is_string($long_1)) { // @phpstan-ignore-line
             return null;
         }
         return [

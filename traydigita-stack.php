@@ -6,7 +6,7 @@
  * their WordPress development experience. It includes features such as a custom autoloader, a
  * registry for managing components, and a set of helper functions for common tasks. The plugin is
  * designed to be lightweight and easy to use, with a focus on performance and flexibility.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: TrayDigita
  * Author URI: https://www.traydigita.com
  * License: GPLv3

@@ -17,6 +17,7 @@ parameters:
         - dist/*
         - .tmp/*
         - .temp/*
+        - src/libs/Icons/IcoMoon/data/*
     treatPhpDocTypesAsCertain: false
     bootstrapFiles:
         - ./.phpstan.php

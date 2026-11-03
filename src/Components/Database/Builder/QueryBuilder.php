@@ -465,7 +465,7 @@ class QueryBuilder implements Stringable
      * @param string ...$selects
      * @return $this
      */
-    public function select(string $select = null, string ...$selects): self
+    public function select(?string $select = null, string ...$selects): self
     {
         $this->type = self::TYPE_SELECT;
         if ($select !== null) {
@@ -500,7 +500,7 @@ class QueryBuilder implements Stringable
      * @param string|null $alias
      * @return $this
      */
-    public function delete(string $table = null, string $alias = null): self
+    public function delete(?string $table = null, ?string $alias = null): self
     {
         $this->type = self::TYPE_DELETE;
         if (!$table) {
@@ -523,7 +523,7 @@ class QueryBuilder implements Stringable
      * @param string|null $alias
      * @return $this
      */
-    public function update(string $table = null, string $alias = null): self
+    public function update(?string $table = null, ?string $alias = null): self
     {
         $this->type = self::TYPE_UPDATE;
         if (!$table) {
@@ -545,7 +545,7 @@ class QueryBuilder implements Stringable
      * @param string|null $alias
      * @return $this
      */
-    public function insert(string $table = null, string $alias = null): self
+    public function insert(?string $table = null, ?string $alias = null): self
     {
         $this->type = self::TYPE_INSERT;
         if (!$table) {
@@ -568,7 +568,7 @@ class QueryBuilder implements Stringable
      * @param bool $append
      * @return $this
      */
-    public function table(string $table, string $alias = null, bool $append = false): self
+    public function table(string $table, ?string $alias = null, bool $append = false): self
     {
         // get table and aliases
         if (!$alias
@@ -602,7 +602,7 @@ class QueryBuilder implements Stringable
      * @return $this
      * @see table()
      */
-    public function from(string $table, string $alias = null): self
+    public function from(string $table, ?string $alias = null): self
     {
         return $this->table($table, $alias);
     }

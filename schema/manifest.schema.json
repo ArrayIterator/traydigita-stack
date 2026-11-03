@@ -1,0 +1,112 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "$id": "manifest-schema",
+    "title": "Manifest Schema",
+    "type": "object",
+    "definitions": {
+        "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "description": "The name of the asset."
+        },
+        "src": {
+            "type": "string",
+            "pattern": ".+\\.[a-zA-Z0-9_]+$",
+            "description": "The source path of the asset."
+        },
+        "file": {
+            "type": "string",
+            "pattern": ".+\\.[a-zA-Z0-9_]+$",
+            "description": "The file name of the asset."
+        },
+        "baseName": {
+            "type": "string",
+            "pattern": "^([a-zA-Z0-9_-]+([a-zA-Z0-9._-]*[a-zA-Z0-9_-])*/)*[a-zA-Z0-9_-]+([a-zA-Z0-9._-]*[a-zA-Z0-9_-])*$",
+            "description": "The base name of the asset file."
+        },
+        "files": {
+            "type": "object",
+            "description": "An object containing the unminified and minified versions of the asset file.",
+            "additionalProperties": false,
+            "properties": {
+                "unminified": {
+                    "type": "string",
+                    "pattern": ".+\\.[a-zA-Z0-9_]+$",
+                    "description": "The unminified version of the asset file."
+                },
+                "minified": {
+                    "type": "string",
+                    "pattern": ".+\\.min\\.[a-zA-Z0-9_]+$",
+                    "description": "The minified version of the asset file."
+                }
+            }
+        },
+        "isEntry": {
+            "type": "boolean",
+            "description": "Indicates whether the asset is an entry point."
+        }
+    },
+    "additionalProperties": false,
+    "patternProperties": {
+        "^([a-zA-Z0-9_-]+([a-zA-Z0-9._-]*[a-zA-Z0-9_-])*\/)*[a-zA-Z0-9_-]+([a-zA-Z0-9._-]*[a-zA-Z0-9_-])*\\.[a-zA-Z0-9_]+$": {
+            "type": "object",
+            "description": "An asset entry in the manifest.",
+            "oneOf": [
+                {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "src",
+                        "file",
+                        "baseName",
+                        "files",
+                        "isEntry"
+                    ],
+                    "properties": {
+                        "name": {
+                            "$ref": "#/definitions/name"
+                        },
+                        "src": {
+                            "$ref": "#/definitions/src"
+                        },
+                        "file": {
+                            "$ref": "#/definitions/file"
+                        },
+                        "baseName": {
+                            "$ref": "#/definitions/baseName"
+                        },
+                        "files": {
+                            "$ref": "#/definitions/files"
+                        },
+                        "isEntry": {
+                            "$ref": "#/definitions/isEntry"
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "src",
+                        "file",
+                        "isEntry"
+                    ],
+                    "properties": {
+                        "name": {
+                            "$ref": "#/definitions/name"
+                        },
+                        "src": {
+                            "$ref": "#/definitions/src"
+                        },
+                        "file": {
+                            "$ref": "#/definitions/file"
+                        },
+                        "isEntry": {
+                            "$ref": "#/definitions/isEntry"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

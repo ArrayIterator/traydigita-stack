@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace TrayDigita\WP\Stack\Source\Components\Benchmarks;
 
+use TrayDigita\WP\Stack\Source\Components\Benchmarks\Records\TimeRecord;
 use TrayDigita\WP\Stack\Source\Exceptions\IllegalOperationException;
 use TrayDigita\WP\Stack\Source\Interfaces\Collections\TimeRecordInterface;
 use TrayDigita\WP\Stack\Source\Interfaces\Collections\TimeRecordsInterface;
@@ -35,7 +36,7 @@ class TimeRecords implements TimeRecordsInterface
      */
     public static function createRecord(string $name): TimeRecordInterface
     {
-        return new \TrayDigita\WP\Stack\Source\Components\Benchmarks\Records\TimeRecord($name);
+        return new TimeRecord($name);
     }
 
     /**
@@ -122,7 +123,7 @@ class TimeRecords implements TimeRecordsInterface
         if (isset($this->records[$name])) {
             return $this->records[$name];
         }
-        $record = new \TrayDigita\WP\Stack\Source\Components\Benchmarks\Records\TimeRecord($name);
+        $record = new TimeRecord($name);
         $this->attach($record);
         return $record;
     }

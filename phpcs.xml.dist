@@ -33,6 +33,7 @@
     <file>release.php</file> <!-- release file -->
     <!-- Exclude Pattern -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/src/*.icomoon.php</exclude-pattern>
     <!-- Slevomat Ruleset -->
     <config name="installed_paths" value="vendor/slevomat/coding-standard/SlevomatCodingStandard"/>
     <!-- constant visibility -->

@@ -39,7 +39,7 @@ final class Stack implements SingletonInterface
     /**
      * The version of the TrayDigita Stack.
      */
-    public const string VERSION = '1.0.0';
+    public const string VERSION = '1.0.1';
 
     /**
      * Plugin name constant for TrayDigita Stack.

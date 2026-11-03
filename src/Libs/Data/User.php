@@ -284,4 +284,15 @@ final class User implements UserInterface
     {
         return isset($this->user->$name);
     }
+
+    /**
+     * Magic method to prevent unsetting properties on the User object
+     *
+     * @param string $name
+     * @return void
+     */
+    public function __unset(string $name): void
+    {
+        // void
+    }
 }

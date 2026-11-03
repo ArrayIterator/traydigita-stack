@@ -488,6 +488,45 @@ final class Iter implements SeekableIterator, Countable, JsonSerializable
     }
 
     /**
+     * Get the first element of the iterable.
+     *
+     * This method returns the first element of the internal iterable. If the iterable is an array,
+     * it uses the `reset()` function to move the pointer to the first element and return it.
+     * If the iterable is a `Generator`, it checks if it's closed or running and handles accordingly.
+     * If the iterable is an `Iterator`, it stores the current key-value pair
+     * in a buffer and moves to the first element.
+     *
+     * @return TValue|false The first value of the iterable, or false if the iterable is empty.
+     */
+    public function first() : mixed
+    {
+        foreach ($this->toArray() as $value) {
+            return $value;
+        }
+        return false;
+    }
+
+    /**
+     * Get the last element of the iterable.
+     *
+     * This method returns the last element of the internal iterable. If the iterable is an array,
+     * it uses the `end()` function to move the pointer to the last element and return it.
+     * If the iterable is a `Generator`, it checks if it's closed or running and handles accordingly.
+     * If the iterable is an `Iterator`, it stores the current key-value pair
+     * in a buffer and moves to the last element.
+     *
+     * @return TValue|false The last value of the iterable, or false if the iterable is empty.
+     */
+    public function last() : mixed
+    {
+        $array = $this->toArray();
+        if (empty($array)) {
+            return false;
+        }
+        return end($array);
+    }
+
+    /**
      * Move the internal pointer to the beginning of the iterable.
      *
      * This method is used to move the internal pointer of the iterable to the first element.

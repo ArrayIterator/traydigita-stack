@@ -158,8 +158,10 @@ class DatetimeImmutableUnit extends DateTimeImmutable implements Stringable
      * @return self
      * @throws Exception
      */
+    #[ReturnTypeWillChange]
     public static function createFromTimestamp(float|int $timestamp): self
     {
+        // @phpstan-ignore-next-line
         if (method_exists(parent::class, 'createFromTimestamp')) {
             return self::wrap(parent::createFromTimestamp($timestamp));
         }

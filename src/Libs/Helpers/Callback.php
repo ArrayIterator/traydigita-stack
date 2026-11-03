@@ -31,7 +31,7 @@ final class Callback
      */
     public static function suppress(
         callable $callback,
-        Throwable &$error = null,
+        ?Throwable &$error = null,
         mixed ...$args
     ): mixed {
         $error = null;
