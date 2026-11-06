@@ -18,6 +18,9 @@ parameters:
         - .tmp/*
         - .temp/*
         - src/libs/Icons/IcoMoon/data/*
+    ignoreErrors:
+        - identifier: class.notFound
+          path: src/Components/Collector/Analytics/Providers/SiteKitGoogle.php
     treatPhpDocTypesAsCertain: false
     bootstrapFiles:
         - ./.phpstan.php

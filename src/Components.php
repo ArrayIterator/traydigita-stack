@@ -8,6 +8,7 @@ use TrayDigita\WP\Stack\Source\Components\Assets\ManifestAssets;
 use TrayDigita\WP\Stack\Source\Components\Auth\StatelessAuthenticator;
 use TrayDigita\WP\Stack\Source\Components\Auth\Totp;
 use TrayDigita\WP\Stack\Source\Components\Benchmarks\TimeRecords;
+use TrayDigita\WP\Stack\Source\Components\Collector\PopularPosts;
 use TrayDigita\WP\Stack\Source\Components\Data\Site;
 use TrayDigita\WP\Stack\Source\Components\Data\SiteOptions;
 use TrayDigita\WP\Stack\Source\Components\Data\SiteTransients;
@@ -57,6 +58,9 @@ final class Components
 
         // Benchmarks
         TimeRecords::class,
+
+        // Collector
+        PopularPosts::class,
 
         // Data
         SiteOptions::class,

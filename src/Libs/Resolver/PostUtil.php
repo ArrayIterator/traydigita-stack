@@ -8,6 +8,7 @@ use TrayDigita\WP\Stack\Source\Libs\Helpers\Ctype;
 use WP_Post;
 use WP_Post_Type;
 use function apply_filters;
+use function array_filter;
 use function get_permalink;
 use function get_post;
 use function get_post_format;
@@ -311,5 +312,68 @@ class PostUtil
         $content .= !is_string($title) ? $post->post_title : $title;
         $content .= $suffix;
         return $content;
+    }
+
+    /**
+     * Find posts based on given arguments.
+     *
+     * @param array{
+     *     include?: int[],
+     *     exclude?: int[],
+     *     post_type?: string|string[],
+     *     limit?: int,
+     *     order?: string,
+     *     orderby?: string,
+     *     post_status?: 'publish'|'draft'|'pending'|'private'|'inherit'|'future'|string,
+     *     status?: 'publish'|'draft'|'pending'|'private'|'inherit'|'future'|string,
+     *     posts_per_page?: int,
+     * } $args The arguments for finding posts.
+     * @return WP_Post[] An array of WP_Post objects that match the criteria.
+     */
+    public static function find(array $args = []): array
+    {
+        $includes = $args['include'] ?? [];
+        $excludes = $args['exclude'] ?? [];
+        $postTypes = $args['post_type'] ?? ['post'];
+        $limit = $args['limit'] ?? $args['posts_per_page'] ?? 10;
+        $order = $args['order'] ?? 'DESC';
+        $postStatus = $args['post_status'] ?? $args['status'] ?? 'publish';
+        if (!is_string($order) || !in_array(strtoupper($order), ['ASC', 'DESC'])) {
+            $order = 'DESC';
+        }
+        if (is_string($postTypes)) {
+            $postTypes = [$postTypes];
+        }
+        if (empty($postTypes)) {
+            $postTypes = ['post'];
+        }
+        $postTypes = array_filter($postTypes, static fn ($type) => is_string($type) && $type !== '');
+        if (empty($postTypes)) {
+            return [];
+        }
+        if (!is_string($postStatus) || $postStatus === '') {
+            $postStatus = 'publish';
+        }
+        $includes = array_filter($includes, static fn ($id) => is_int($id) && $id > 0);
+        $excludes = array_filter($excludes, static fn ($id) => is_int($id) && $id > 0);
+        $queryArgs = [
+            'post_type' => $postTypes,
+            'posts_per_page' => $limit,
+            'post_status' => $postStatus,
+            'order' => $order,
+        ];
+        if (!empty($includes)) {
+            $queryArgs['include'] = $includes;
+        }
+        if (!empty($excludes)) {
+            $queryArgs['exclude'] = $excludes;
+        }
+        $orderBy = $args['orderby'] ?? null;
+        if (is_string($orderBy) && $orderBy !== '') {
+            if (in_array(strtolower($orderBy), ['id', 'title', 'date', 'modified', 'rand'])) {
+                $queryArgs['orderby'] = $orderBy;
+            }
+        }
+        return get_posts($queryArgs);
     }
 }

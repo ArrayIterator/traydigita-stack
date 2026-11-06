@@ -6,9 +6,9 @@ namespace TrayDigita\WP\Stack\Source\Libs\Data;
 use ArrayAccess;
 use Serializable;
 use Stringable;
-use TrayDigita\WP\Stack\Source\Libs\Resolver\PostUtil;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Callback;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\DataFilter;
+use TrayDigita\WP\Stack\Source\Libs\Resolver\PostUtil;
 use WP_Post;
 use function _wp_get_attachment_relative_path;
 use function absint;
@@ -117,9 +117,9 @@ final class FeatureImage implements Stringable, ArrayAccess, Serializable
     protected array $attachment_size = [];
 
     /**
-     * @var array<string> $SUPPORTED_IMAGE_EXTENSIONS
+     * @var string[] $SUPPORTED_IMAGE_EXTENSIONS
      */
-    public const SUPPORTED_IMAGE_EXTENSIONS = [
+    public const array SUPPORTED_IMAGE_EXTENSIONS = [
         'jpg',
         'jpeg',
         'png',

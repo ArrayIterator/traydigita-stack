@@ -5,14 +5,17 @@ namespace TrayDigita\WP\Stack\Source\Components\Data;
 
 use TrayDigita\WP\Stack\Source\Components\Data\Record\TransientData;
 use TrayDigita\WP\Stack\Source\Components\Data\Traits\OptionTrait;
-use TrayDigita\WP\Stack\Source\Interfaces\Data\OptionInterface;
+use TrayDigita\WP\Stack\Source\Interfaces\Collections\RegistryComponentInterface;
+use TrayDigita\WP\Stack\Source\Interfaces\Collections\RegistryInterface;
+use TrayDigita\WP\Stack\Source\Interfaces\Data\TransientOptionInterface;
+use TrayDigita\WP\Stack\Source\Libs\Collections\RegistryChainingIdentity;
 use function doing_action;
 use function is_array;
 use function sprintf;
 use function time;
 use function trim;
 
-final class SiteTransients implements OptionInterface
+final class SiteTransients implements TransientOptionInterface, RegistryComponentInterface
 {
     use OptionTrait {
         __construct as private constructOption;
@@ -27,7 +30,7 @@ final class SiteTransients implements OptionInterface
      *
      * @var string
      */
-    public const OPTION_NAME = 'site_transient';
+    public const string OPTION_NAME = 'site_transient';
 
     /**
      * Optional suffix appended to the generated option name.
@@ -175,5 +178,21 @@ final class SiteTransients implements OptionInterface
     public function getOptionName(): string
     {
         return sprintf('%s%s%s', self::PREFIX, self::OPTION_NAME, $this->suffixName);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function registerSelf(string $id, RegistryInterface $registry): RegistryChainingIdentity
+    {
+        return RegistryChainingIdentity::create(
+            $id,
+            [
+                self::class,
+                TransientOptionInterface::class,
+            ],
+            $registry->locked($id),
+            $registry->unlockable($id)
+        );
     }
 }

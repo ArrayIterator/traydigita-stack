@@ -5,21 +5,21 @@ namespace TrayDigita\WP\Stack\Source\Interfaces\Data;
 
 interface OptionInterface
 {
-    public const PREFIX = 'traydigita_wp_';
+    public const string PREFIX = 'traydigita_wp_';
 
-    public const TYPE_SITE_OPTION = 'site_option';
+    public const string TYPE_SITE_OPTION = 'site_option';
 
-    public const TYPE_OPTION = 'option';
+    public const string TYPE_OPTION = 'option';
 
-    public const TYPE_TRANSIENT = 'transient';
+    public const string TYPE_TRANSIENT = 'transient';
 
-    public const TYPE_SITE_TRANSIENT = 'site_transient';
+    public const string TYPE_SITE_TRANSIENT = 'site_transient';
 
-    public const MIN_EXPIRATION = 300; // 5 minutes
+    public const int MIN_EXPIRATION = 300; // 5 minutes
 
-    public const MAX_EXPIRATION = 2592000; // a month
+    public const int MAX_EXPIRATION = 2592000; // a month
 
-    public const DEFAULT_EXPIRATION = 604800; // 7 days
+    public const int DEFAULT_EXPIRATION = 604800; // 7 days
 
     /**
      * Set the expiration time for the option
@@ -54,14 +54,14 @@ interface OptionInterface
      *
      * @return array<string, mixed>
      */
-    public function refresh() : array;
+    public function refresh(): array;
 
     /**
      * Get all options as an associative array
      *
      * @return array<string, mixed>
      */
-    public function all() : array;
+    public function all(): array;
 
     /**
      * Get the value of an option

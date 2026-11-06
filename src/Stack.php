@@ -7,6 +7,7 @@ use TrayDigita\WP\Stack\Source\Components\Assets\ManifestAssets;
 use TrayDigita\WP\Stack\Source\Components\Auth\StatelessAuthenticator;
 use TrayDigita\WP\Stack\Source\Components\Auth\Totp;
 use TrayDigita\WP\Stack\Source\Components\Benchmarks\TimeRecords;
+use TrayDigita\WP\Stack\Source\Components\Collector\PopularPosts;
 use TrayDigita\WP\Stack\Source\Components\Data\Site;
 use TrayDigita\WP\Stack\Source\Components\Data\SiteOptions;
 use TrayDigita\WP\Stack\Source\Components\Data\SiteTransients;
@@ -39,7 +40,7 @@ final class Stack implements SingletonInterface
     /**
      * The version of the TrayDigita Stack.
      */
-    public const string VERSION = '1.0.1';
+    public const string VERSION = '1.0.0';
 
     /**
      * Plugin name constant for TrayDigita Stack.
@@ -384,5 +385,15 @@ final class Stack implements SingletonInterface
     public function getFilter(): ?Filter
     {
         return $this->getOfInstance(Filter::class);
+    }
+
+    /**
+     * Get the popular posts component
+     *
+     * @return PopularPosts|null
+     */
+    public function getPopularPosts(): ?PopularPosts
+    {
+        return $this->getOfInstance(PopularPosts::class);
     }
 }

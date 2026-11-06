@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace TrayDigita\WP\Stack\Source;
 
 use stdClass;
+use Throwable;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\ParseDown;
 use function _cleanup_header_comment;
 use function apply_filters;
 use function array_combine;
@@ -46,6 +48,11 @@ class UpdateCheck
     public const string GH_LATEST = 'https://api.github.com/repos/ArrayIterator/traydigita-stack/releases/latest';
 
     /**
+     * The URL for the plugin's changelog on GitHub.
+     */
+    public const string CHANGELOG_URL = 'https://github.com/ArrayIterator/traydigita-stack/tree/{tag}/CHANGELOG.md';
+
+    /**
      * The name of the transient used for caching temporary update check results.
      */
     public const string TEMP_NAME_TRANSIENT = 'traydigita-stack-temp-transient';
@@ -54,6 +61,11 @@ class UpdateCheck
      * The name of the transient used for caching temporary tag update check results.
      */
     public const string TEMP_TAG_NAME_TRANSIENT = 'traydigita-stack-temp-tag-transient';
+
+    /**
+     * The name of the transient used for caching temporary changelog results.
+     */
+    public const string TEMP_CHANGELOG_NAME_TRANSIENT = 'traydigita-stack-temp-changelog-transient';
 
     /**
      * Get the raw URL for a specific tag.
@@ -258,6 +270,50 @@ class UpdateCheck
     }
 
     /**
+     * Get the changelog for a specific tag.
+     *
+     * @param string $tag The tag for which to retrieve the changelog.
+     * @return string|null The changelog as a string, or null if not available.
+     */
+    private static function getChangeLog(string $tag): ?string
+    {
+        if (empty($tag)) {
+            return null;
+        }
+        $trans = get_site_transient(self::TEMP_CHANGELOG_NAME_TRANSIENT);
+        if (is_array($trans) && is_string($trans['body'] ?? null)
+            && is_numeric($trans['time'] ?? null)
+            && (time() - (int)$trans['time'] < MINUTE_IN_SECONDS * 15)
+            && is_string($trans['body'] ?? null)
+            // check if force_check is set
+            && (!isset($_GET['force-check']) || ($_GET['force-check'] !== '1'))
+        ) {
+            $body = $trans['body'];
+        } else {
+            $url = str_replace('{tag}', $tag, self::CHANGELOG_URL);
+            $url .= '?cache_bust=' . time();
+            $response = wp_remote_get($url, ['timeout' => 5]);
+            if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+                return null;
+            }
+            $body = wp_remote_retrieve_body($response);
+            if (!is_string($body)) {
+                return null;
+            }
+            set_site_transient(self::TEMP_CHANGELOG_NAME_TRANSIENT, [
+                'body' => $body,
+                'time' => time(),
+            ], MINUTE_IN_SECONDS * 15);
+        }
+        $parse = new ParseDown();
+        try {
+            return $parse->text($body);
+        } catch (Throwable) {
+            return null;
+        }
+    }
+
+    /**
      * Handle the plugin details request for the WordPress plugins API.
      *
      * @param mixed $result The result of the plugins API request.
@@ -332,6 +388,10 @@ class UpdateCheck
 </ol>
 HTML,
         ];
+        $changelog = self::getChangeLog($plugin->new_version ?? '');
+        if (is_string($changelog) && $changelog) {
+            $info->sections['changelog'] = $changelog;
+        }
         // rating
         $info->rating = 100;
         $info->num_ratings = 9999;

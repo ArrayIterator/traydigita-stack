@@ -38,7 +38,7 @@ final class RawParams
     /**
      * The maximum size of the POST data that can be accepted.
      */
-    public const MAX_POST_SIZE = 1024 * 1024 * 2; // 2 MB
+    public const int|float MAX_POST_SIZE = 1024 * 1024 * 2; // 2 MB
 
     /**
      * Get the server parameters from the global $_SERVER variable.
@@ -412,5 +412,17 @@ final class RawParams
         $key = self::normalizeHeaderName($key);
         $cache = self::headers();
         return array_key_exists($key, $cache) ? $cache[$key] : $default;
+    }
+
+    /**
+     * Get the referer URL from the server or header parameters.
+     * Null-Safe, if the referer is not found, it will return null.
+     *
+     * @return ?string The referer URL or null if not found.
+     */
+    public static function referer(): ?string
+    {
+        $ref = self::server('HTTP_REFERER') ?? self::header('Referer');
+        return is_string($ref) ? $ref : null;
     }
 }
