@@ -50,7 +50,8 @@ class UpdateCheck
     /**
      * The URL for the plugin's changelog on GitHub.
      */
-    public const string CHANGELOG_URL = 'https://github.com/ArrayIterator/traydigita-stack/tree/{tag}/CHANGELOG.md';
+//    public const string CHANGELOG_URL = 'https://github.com/ArrayIterator/traydigita-stack/tree/{tag}/CHANGELOG.md';
+    public const string CHANGELOG_URL = 'https://raw.githubusercontent.com/ArrayIterator/traydigita-stack/refs/heads/main/CHANGELOG.md';
 
     /**
      * The name of the transient used for caching temporary update check results.
