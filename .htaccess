@@ -1,1 +1,6 @@
-Deny from all
+# if match .php redirect 302 to /
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} \.php$ [NC]
+    RewriteRule ^(.*)$ / [R=302,L]
+</IfModule>
