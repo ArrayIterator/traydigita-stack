@@ -391,4 +391,18 @@ final class Is
     {
         return $generator->valid() === false;
     }
+
+    /**
+     * Check if the given string is a valid UUIDv7.
+     *
+     * @param string $uuid The string to check.
+     * @return bool True if the string is a valid UUIDv7, false otherwise.
+     */
+    public static function UUIDv7(string $uuid): bool
+    {
+        return preg_match(
+            '/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i',
+            $uuid
+        ) === 1;
+    }
 }

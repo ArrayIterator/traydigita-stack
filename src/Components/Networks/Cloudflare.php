@@ -58,7 +58,7 @@ final class Cloudflare
     /**
      * @var string[] The server parameters for Cloudflare requests.
      */
-    public const CLOUDFLARE_HEADERS = [
+    public const array CLOUDFLARE_HEADERS = [
         'HTTP_X_FORWARDED_PROTO',
         'HTTP_X_FORWARDED_FOR',
         self::CLOUDFLARE_CF_RAY_HEADER,
@@ -68,22 +68,22 @@ final class Cloudflare
     /**
      * @var string The header name for the Cloudflare Ray ID.
      */
-    public const CLOUDFLARE_CF_RAY_HEADER = 'HTTP_CF_RAY';
+    public const string CLOUDFLARE_CF_RAY_HEADER = 'HTTP_CF_RAY';
 
     /**
      * @var string The header name for the Cloudflare client IP.
      */
-    public const CLOUDFLARE_CLIENT_IP_HEADER = 'HTTP_CF_CONNECTING_IP';
+    public const string CLOUDFLARE_CLIENT_IP_HEADER = 'HTTP_CF_CONNECTING_IP';
 
     /**
      * @var string The header name for the Cloudflare WARP tag ID.
      */
-    public const CLOUDFLARE_WARP_TAG_HEADER = 'HTTP_CF_WARP_TAG_ID';
+    public const string CLOUDFLARE_WARP_TAG_HEADER = 'HTTP_CF_WARP_TAG_ID';
 
     /**
      * @var string[] The server parameters for Cloudflare WARP requests.
      */
-    public const CLOUDFLARE_WARP_HEADERS = [
+    public const array CLOUDFLARE_WARP_HEADERS = [
         self::CLOUDFLARE_WARP_TAG_HEADER,
     ];
 

@@ -40,12 +40,12 @@ class LazyQuery implements Iterator, ResettableInterface
     /**
      * Maximum limit for the query.
      */
-    public const MAX_LIMIT = 1000;
+    public const int MAX_LIMIT = 1000;
 
     /**
      * Default limit for the query.
      */
-    public const DEFAULT_LIMIT = 200;
+    public const int DEFAULT_LIMIT = 200;
 
     /**
      * @var array<int, TObject>

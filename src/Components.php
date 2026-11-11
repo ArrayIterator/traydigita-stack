@@ -29,6 +29,7 @@ use TrayDigita\WP\Stack\Source\Components\Provider\JetpackPhoton;
 use TrayDigita\WP\Stack\Source\Components\Security\Hash;
 use TrayDigita\WP\Stack\Source\Components\Utils\Filter;
 use TrayDigita\WP\Stack\Source\Components\Utils\Resolver;
+use TrayDigita\WP\Stack\Source\Components\Utils\Validator;
 use TrayDigita\WP\Stack\Source\Libs\Collections\RegistryComponent;
 use TrayDigita\WP\Stack\Source\Libs\Collections\RegistryDefinitions\AutoWire;
 use TrayDigita\WP\Stack\Source\Libs\Collections\RegistryDefinitions\Reference;
@@ -99,7 +100,7 @@ final class Components
         // Utils
         Resolver::class,
         Filter::class,
-        Resolver::class
+        Validator::class,
     ];
 
     /**

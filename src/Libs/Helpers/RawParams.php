@@ -330,6 +330,27 @@ final class RawParams
     }
 
     /**
+     * Get a header value from the server parameters.
+     *
+     * @param array<string, mixed> $serverParams The server parameters.
+     * @param string $headerName The header name to retrieve.
+     * @return ?string The header value or null if not found.
+     */
+    public static function headerOf(array $serverParams, string $headerName): ?string
+    {
+        $headerName = self::normalizeHeaderName($headerName);
+        foreach ($serverParams as $key => $value) {
+            if (str_starts_with($key, 'HTTP_')) {
+                $currentHeaderName = self::normalizeHeaderName(substr($key, 5));
+                if ($currentHeaderName === $headerName) {
+                    return is_string($value) ? $value : null;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Get a parameter from the request parameters.
      * Null-Safe, if the parameter is not found, it will return the default value.
      *

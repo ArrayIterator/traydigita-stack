@@ -13,3 +13,5 @@ if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
 define('WP_USE_THEMES', false);
 
 require_once __DIR__ .'/../../../wp-load.php';
+require_once __DIR__ . '/../../../wp-admin/includes/class-wp-list-table.php';
+require_once __DIR__ . '/../../../wp-admin/includes/class-wp-screen.php';

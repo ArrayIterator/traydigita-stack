@@ -6,6 +6,7 @@ namespace TrayDigita\WP\Stack\Source;
 use stdClass;
 use Throwable;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\ParseDown;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\RawParams;
 use function _cleanup_header_comment;
 use function apply_filters;
 use function array_combine;
@@ -50,8 +51,11 @@ class UpdateCheck
     /**
      * The URL for the plugin's changelog on GitHub.
      */
-//    public const string CHANGELOG_URL = 'https://github.com/ArrayIterator/traydigita-stack/tree/{tag}/CHANGELOG.md';
-    public const string CHANGELOG_URL = 'https://raw.githubusercontent.com/ArrayIterator/traydigita-stack/refs/heads/main/CHANGELOG.md';
+    public const string CHANGELOG_URL = 'https://github.com/ArrayIterator/traydigita-stack/tree/{tag}/CHANGELOG.md';
+
+    // demo
+    // public const string CHANGELOG_URL =
+    // 'https://raw.githubusercontent.com/ArrayIterator/traydigita-stack/refs/heads/main/CHANGELOG.md';
 
     /**
      * The name of the transient used for caching temporary update check results.
@@ -69,6 +73,11 @@ class UpdateCheck
     public const string TEMP_CHANGELOG_NAME_TRANSIENT = 'traydigita-stack-temp-changelog-transient';
 
     /**
+     * Indicates whether to force a check for updates, bypassing any cached results.
+     */
+    protected static bool $forceCheck;
+
+    /**
      * Get the raw URL for a specific tag.
      *
      * @param string $tag The tag for which to get the raw URL.
@@ -80,6 +89,24 @@ class UpdateCheck
             'https://raw.githubusercontent.com/ArrayIterator/traydigita-stack/refs/tags/%s/traydigita-stack.php',
             $tag
         );
+    }
+
+    public static function isForceCheck(): bool
+    {
+        if (isset(self::$forceCheck)) {
+            return self::$forceCheck;
+        }
+        global $pagenow;
+        if ($pagenow !== 'update-core.php') {
+            self::$forceCheck = false;
+            return false;
+        }
+        if (RawParams::get('force-check') === '1') {
+            self::$forceCheck = true;
+            return true;
+        }
+        self::$forceCheck = false;
+        return false;
     }
 
     /**
@@ -166,6 +193,18 @@ class UpdateCheck
     }
 
     /**
+     * Cached plugin data to avoid repeated calls to get_plugin_data().
+     *
+     * @var array<string, string>
+     */
+    private static array $pluginDataTags = [];
+
+    /**
+     * @var array<string, string>
+     */
+    private static array $pluginChangelogTags = [];
+
+    /**
      * Get the plugin data from a specific tag.
      *
      * @param string $tag The tag to fetch plugin data for.
@@ -176,8 +215,12 @@ class UpdateCheck
         if (empty($tag)) {
             return null;
         }
+        if (isset(self::$pluginDataTags[$tag]) && is_string(self::$pluginDataTags[$tag])) {
+            return self::getTagMetaData(self::$pluginDataTags[$tag]);
+        }
         $transientName = self::TEMP_TAG_NAME_TRANSIENT . '-' . $tag;
         $trans = get_site_transient($transientName);
+        $body = null;
         if (is_array($trans) && is_string($trans['body'] ?? null)
             && is_numeric($trans['time'] ?? null)
             && (time() - (int)$trans['time'] < MINUTE_IN_SECONDS * 15)
@@ -185,12 +228,25 @@ class UpdateCheck
             && str_starts_with($trans['body'], '<?php')
         ) {
             $body = $trans['body'];
-        } else {
+        }
+        if (empty($body) || self::isForceCheck()) {
             $url = self::tagRawUrl($tag);
             $url .= '?cache_bust=' . time();
             $response = wp_remote_get($url, ['timeout' => 5]);
             if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
-                return null;
+                if (!is_string($body)) {
+                    set_site_transient(
+                        $transientName,
+                        [
+                            'body' => $response,
+                            'time' => time(),
+                        ],
+                        MINUTE_IN_SECONDS * 15
+                    );
+                    return null;
+                }
+                self::$pluginDataTags[$tag] = $body;
+                return self::getTagMetaData($body);
             }
             $body = wp_remote_retrieve_body($response);
             set_site_transient($transientName, [
@@ -201,6 +257,7 @@ class UpdateCheck
         if (!str_starts_with($body, '<?php')) {
             return null;
         }
+        self::$pluginDataTags[$tag] = $body;
         return self::getTagMetaData($body);
     }
 
@@ -235,6 +292,7 @@ class UpdateCheck
     private static function getLatestRelease(): ?string
     {
         $trans = get_site_transient(self::TEMP_NAME_TRANSIENT);
+        $body = null;
         if (is_array($trans) && is_string($trans['body'] ?? null)
             && is_numeric($trans['time'] ?? null)
             && (time() - (int)$trans['time'] < MINUTE_IN_SECONDS * 15)
@@ -243,12 +301,32 @@ class UpdateCheck
             && (!isset($_GET['force-check']) || ($_GET['force-check'] !== '1'))
         ) {
             $body = $trans['body'];
-        } else {
+        }
+        if (empty($body) || self::isForceCheck()) {
             $url = self::GH_LATEST;
             $url .= '?cache_bust=' . time();
             $response = wp_remote_get($url, ['timeout' => 5]);
             if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
-                return null;
+                if (!is_string($body)) {
+                    set_site_transient(
+                        self::TEMP_NAME_TRANSIENT,
+                        [
+                            'body' => $response,
+                            'time' => time(),
+                        ],
+                        MINUTE_IN_SECONDS * 15
+                    );
+                    return null;
+                }
+                $releaseData = json_decode($body, true);
+                if (!is_array($releaseData)
+                    || !isset($releaseData['tag_name'])
+                    || !isset($releaseData['assets'])
+                    || !is_array($releaseData['assets'])
+                ) {
+                    return null;
+                }
+                return $body;
             }
             $body = wp_remote_retrieve_body($response);
             set_site_transient(self::TEMP_NAME_TRANSIENT, [
@@ -281,6 +359,14 @@ class UpdateCheck
         if (empty($tag)) {
             return null;
         }
+        if (isset(self::$pluginChangelogTags[$tag]) && is_string(self::$pluginChangelogTags[$tag])) {
+            try {
+                return ParseDown::instance()->text(self::$pluginChangelogTags[$tag]);
+            } catch (Throwable) {
+                return null;
+            }
+        }
+        $body = null;
         $trans = get_site_transient(self::TEMP_CHANGELOG_NAME_TRANSIENT);
         if (is_array($trans) && is_string($trans['body'] ?? null)
             && is_numeric($trans['time'] ?? null)
@@ -290,12 +376,29 @@ class UpdateCheck
             && (!isset($_GET['force-check']) || ($_GET['force-check'] !== '1'))
         ) {
             $body = $trans['body'];
-        } else {
+        }
+        if (empty($body) || self::isForceCheck()) {
             $url = str_replace('{tag}', $tag, self::CHANGELOG_URL);
             $url .= '?cache_bust=' . time();
             $response = wp_remote_get($url, ['timeout' => 5]);
             if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
-                return null;
+                if (!is_string($body)) {
+                    set_site_transient(
+                        self::TEMP_CHANGELOG_NAME_TRANSIENT,
+                        [
+                            'body' => $response,
+                            'time' => time(),
+                        ],
+                        MINUTE_IN_SECONDS * 15
+                    );
+                    return null;
+                }
+                self::$pluginChangelogTags[$tag] = $body;
+                try {
+                    return ParseDown::instance()->text($body);
+                } catch (Throwable) {
+                    return null;
+                }
             }
             $body = wp_remote_retrieve_body($response);
             if (!is_string($body)) {
@@ -306,9 +409,9 @@ class UpdateCheck
                 'time' => time(),
             ], MINUTE_IN_SECONDS * 15);
         }
-        $parse = new ParseDown();
+        self::$pluginChangelogTags[$tag] = $body;
         try {
-            return $parse->text($body);
+            return ParseDown::instance()->text($body);
         } catch (Throwable) {
             return null;
         }
@@ -374,9 +477,15 @@ class UpdateCheck
         $info->tested = $plugin->tested ?? '6.0';
         $info->requires_php = $plugin->requires_php ?? '8.3';
         $info->download_link = !is_string($plugin->package ?? null) || !$plugin->package ? '' : $plugin->package;
-        // Try to get changelog/description from the remote source
-        $info->sections = [
-            'description' => <<<'HTML'
+        $pluginDataCheck = self::getPluginDataFromTag($plugin->new_version ?? '');
+        if (is_array($pluginDataCheck) && is_string($pluginDataCheck['Description'] ?? null)) {
+            $info->sections = [
+                'description' => $pluginDataCheck['Description'],
+            ];
+        } else {
+            // Try to get changelog/description from the remote source
+            $info->sections = [
+                'description' => <<<'HTML'
  <p>A WordPress plugin that provides a set of tools and utilities for developers to enhance
  their WordPress development experience. It includes features such as a custom autoloader,
  a registry for managing components, and a set of helper functions for common tasks.
@@ -387,8 +496,9 @@ class UpdateCheck
     <li>Registry for managing components</li>
     <li>Set of helper functions for common tasks</li>
 </ol>
-HTML,
-        ];
+HTML
+            ];
+        }
         $changelog = self::getChangeLog($plugin->new_version ?? '');
         if (is_string($changelog) && $changelog) {
             $info->sections['changelog'] = $changelog;

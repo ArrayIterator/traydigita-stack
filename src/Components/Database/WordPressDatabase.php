@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace TrayDigita\WP\Stack\Source\Components\Database;
 
+use DateTimeImmutable;
 use mysqli;
 use mysqli_result;
 use ReflectionObject;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Callback;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\DatetimeImmutableUnit;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Reflections;
 use function explode;
 use function is_string;
@@ -15,6 +17,7 @@ use function str_ends_with;
 use function str_starts_with;
 use function strtolower;
 use function substr;
+use function wp_timezone;
 use const ARRAY_A;
 use const MYSQLI_STORE_RESULT;
 use const MYSQLI_USE_RESULT;
@@ -241,6 +244,20 @@ class WordPressDatabase
             $table = substr($table, 1, -1);
         }
         return isset($this->getSchema()[$table]);
+    }
+
+    /**
+     * Get current time in 'Y-m-d H:i:s' format, optionally in UTC.
+     * @param bool $utc
+     * @return string
+     */
+    public function currentTime(bool $utc = false): string
+    {
+        return (new DateTimeImmutable('now'))->setTimezone(
+            $utc
+                ? DatetimeImmutableUnit::utcTimeZone()
+                : wp_timezone()
+        )->format('Y-m-d H:i:s');
     }
 
     /**

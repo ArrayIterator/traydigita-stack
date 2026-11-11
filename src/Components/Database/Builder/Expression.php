@@ -16,32 +16,32 @@ final class Expression
     /**
      * @var string the equal operator
      */
-    public const EQ = '=';
+    public const string EQ = '=';
 
     /**
      * @var string the not equal operator
      */
-    public const NEQ = '<>';
+    public const string NEQ = '<>';
 
     /**
      * @var string the less than operator
      */
-    public const LT = '<';
+    public const string LT = '<';
 
     /**
      * @var string the less than or equal operator
      */
-    public const LTE = '<=';
+    public const string LTE = '<=';
 
     /**
      * @var string the greater than operator
      */
-    public const GT = '>';
+    public const string GT = '>';
 
     /**
      * @var string the greater than or equal operator
      */
-    public const GTE = '>=';
+    public const string GTE = '>=';
 
     /**
      * Creates a new AND composite expression

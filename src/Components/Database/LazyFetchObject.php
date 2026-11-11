@@ -17,26 +17,26 @@ use function strtolower;
 use function unserialize;
 
 /**
- * @template TKey of non-empty-string
- * @template TNormalizedKey of TKey&lowercase-string
- * @template TValue of mixed
- * @template-implements IteratorAggregate<TKey, TValue>
- * @template-implements ArrayAccess<TKey, TValue>
+ * A class that provides lazy fetching of data from an array.
+ * @template TVal of array<non-empty-lowercase-string, mixed>
+ * @template-implements IteratorAggregate<key-of<TVal>, value-of<TVal>>
+ * @template-implements ArrayAccess<key-of<TVal>, value-of<TVal>>
  */
 class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, JsonSerializable
 {
     /**
-     * @var array<TNormalizedKey, TValue> $data
+     * @var array<key-of<TVal>&lowercase-string, value-of<TVal>> $data
      */
     private array $data;
 
     /**
-     * @var array<TNormalizedKey, TValue> $new_data
+     * @var array<key-of<TVal>&lowercase-string, value-of<TVal>> $new_data
      */
     private array $new_data;
 
     /**
-     * @var TNormalizedKey[] $blacklisted_key
+     * The blacklisted keys for this object.
+     * @var (key-of<TVal>&lowercase-string)[] $blacklisted_key
      */
     protected array $blacklisted_key;
 
@@ -54,7 +54,7 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     }
 
     /**
-     * @param TNormalizedKey|TKey $name
+     * @param key-of<TVal>|non-empty-string $name
      * @return bool
      */
     public function has(string $name): bool
@@ -65,40 +65,36 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Set the value for a given property.
      *
-     * @param TKey|TNormalizedKey $name
-     * @param TValue $value
+     * @param key-of<TVal>|non-empty-string $name
+     * @param value-of<TVal> $value
      */
-    public function set(string $name, mixed $value) : void
+    public function set(string $name, mixed $value): void
     {
-        /**
-         * @var TNormalizedKey $name
-         */
         $name = strtolower($name);
         if (!isset($this->data) || !array_key_exists($name, $this->data)) {
             return;
         }
-        $oldVal = $this->data[$name];
         /**
-         * @var TValue $oldVal
+         * @var lowercase-string&key-of<TVal> $name
          */
+        $oldVal = $this->data[$name];
         $value = $this->setupNewValue($name, $value, $oldVal, $found);
         if (!$found) {
             return;
         }
-        /**
-         * @var TValue $value
-         */
-        $this->new_data ??= [];
+        if (!isset($this->new_data)) {
+            $this->new_data = [];
+        }
         $this->new_data[$name] = $value;
     }
 
     /**
      * Get the value for a given property.
      *
-     * @param TKey|TNormalizedKey $name
-     * @return TValue
+     * @param key-of<TVal>|non-empty-string $name
+     * @return value-of<TVal>
      */
-    public function get(string $name) : mixed
+    public function get(string $name): mixed
     {
         return $this->all()[strtolower($name)];
     }
@@ -106,18 +102,18 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Get the blacklisted keys for this object.
      *
-     * @return TNormalizedKey[]
+     * @return (key-of<TVal>&lowercase-string)[]
      */
-    protected function getBlackListedKeys() : array
+    protected function getBlackListedKeys(): array
     {
-        return $this->blacklisted_key??[];
+        return $this->blacklisted_key ?? [];
     }
 
     /**
      * Set the value for a given property.
      *
-     * @param TKey|TNormalizedKey $name
-     * @param TValue $value
+     * @param key-of<TVal>|non-empty-string $name
+     * @param value-of<TVal> $value
      */
     final public function __set(string $name, mixed $value): void
     {
@@ -125,9 +121,15 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
             $this->set($name, $value);
             return;
         }
-        $this->data ??= [];
+        if (!isset($this->data)) {
+            /**
+             * @var array<key-of<TVal>&lowercase-string, value-of<TVal>> $val
+             */
+            $val = [];
+            $this->data = $val;
+        }
         /**
-         * @var TNormalizedKey $lower
+         * @var lowercase-string&key-of<TVal> $lower
          */
         $lower = strtolower($name);
         $this->data[$lower] ??= $this->convertValue($lower, $value, $name);
@@ -136,10 +138,10 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Convert the value for a given property.
      *
-     * @param TNormalizedKey $name
-     * @param TValue $value
+     * @param key-of<TVal>|non-empty-string $name
+     * @param value-of<TVal> $value
      * @param string $realName
-     * @return TValue
+     * @return value-of<TVal>
      */
     protected function convertValue(string $name, mixed $value, string $realName): mixed
     {
@@ -149,12 +151,12 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Set up the new value for a given property.
      *
-     * @param TNormalizedKey $name
-     * @param TValue $value
-     * @param TValue $oldValue
+     * @param key-of<TVal>|non-empty-string $name
+     * @param value-of<TVal> $value
+     * @param value-of<TVal> $oldValue
      * @param bool|null $canBeSet
      * @param-out bool $canBeSet
-     * @return TValue
+     * @return value-of<TVal>
      */
     protected function setupNewValue(string $name, mixed $value, mixed $oldValue, ?bool &$canBeSet = null): mixed
     {
@@ -165,7 +167,7 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Get all the data for this object.
      *
-     * @return array<TNormalizedKey, TValue>
+     * @phpstan-return array<key-of<TVal>&lowercase-string, value-of<TVal>>
      */
     public function all(): array
     {
@@ -175,7 +177,7 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Get the new data for this object.
      *
-     * @return array<TNormalizedKey, TValue>
+     * @phpstan-return array<key-of<TVal>&lowercase-string, value-of<TVal>>
      */
     public function getNewData(): array
     {
@@ -193,18 +195,21 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Check if a property is set.
      *
-     * @param TNormalizedKey|TKey $name
+     * @param string $name
      * @return bool
      */
     public function __isset(string $name): bool
     {
+        /**
+         * @var key-of<TVal> $name
+         */
         return $this->has($name);
     }
 
     /**
      * Unset a property.
      *
-     * @param TNormalizedKey|TKey $name
+     * @param string $name
      */
     public function __unset(string $name): void
     {
@@ -218,23 +223,29 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Get a property.
      *
-     * @param TNormalizedKey|TKey $name
+     * @param string $name
      * @return mixed
      */
-    public function __get(string $name) : mixed
+    public function __get(string $name): mixed
     {
+        /**
+         * @var key-of<TVal> $name
+         */
         return $this->get($name);
     }
 
     /**
      * Get the value for a given property.
      *
-     * @param TNormalizedKey|TKey $name
+     * @param string $name
      * @param array<array-key, mixed> $arguments
      * @return mixed
      */
     public function __call(string $name, array $arguments): mixed
     {
+        /**
+         * @var key-of<TVal> $name
+         */
         return $this->get($name);
     }
 
@@ -250,7 +261,7 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
             return false;
         }
         /**
-         * @var TNormalizedKey|TKey $offset
+         * @var key-of<TVal> $offset
          */
         return $this->has($offset);
     }
@@ -267,7 +278,7 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
             return null;
         }
         /**
-         * @var TNormalizedKey|TKey $offset
+         * @var key-of<TVal> $offset
          */
         return $this->get($offset);
     }
@@ -275,8 +286,8 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Set a property.
      *
-     * @param mixed|TNormalizedKey|TKey $offset
-     * @param mixed|TValue $value
+     * @param mixed|key-of<TVal> $offset
+     * @param mixed|value-of<TVal> $value
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -284,7 +295,7 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
             return;
         }
         /**
-         * @var TNormalizedKey|TKey $offset
+         * @var key-of<TVal> $offset
          */
         $this->set($offset, $value);
     }
@@ -292,35 +303,36 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Unset a property.
      *
-     * @param mixed|TNormalizedKey|TKey $offset
+     * @param mixed|key-of<TVal> $offset
      */
     public function offsetUnset(mixed $offset): void
     {
-        /**
-         * @var TNormalizedKey|TKey $offset
-         */
         if (!is_string($offset)) {
             return;
         }
+        /**
+         * @var key-of<TVal> $offset
+         */
         $this->__unset($offset);
     }
 
     /**
      * Get an iterator for this object.
      *
-     * @return Traversable<TNormalizedKey, TValue>
+     * @return Traversable<key-of<TVal>, value-of<TVal>>
      */
     public function getIterator(): Traversable
     {
         /**
-         * @var Traversable<TNormalizedKey, TValue> $result
+         * @var Traversable<key-of<TVal>, value-of<TVal>> $result
          */
         $result = new ArrayIterator($this->all());
         return $result;
     }
 
     /**
-     * @return array<TNormalizedKey, TValue>
+     * Convert the object to an array.
+     * @phpstan-return array<key-of<TVal>&lowercase-string, value-of<TVal>>
      */
     public function toArray(): array
     {
@@ -350,7 +362,8 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Serialize the object to an array.
      *
-     * @return array<TNormalizedKey, TValue>
+     * @phpstan-return array<key-of<TVal>&lowercase-string, value-of<TVal>>
+     * @return TVal
      */
     public function __serialize(): array
     {
@@ -360,17 +373,18 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Unserialize the object from an array.
      *
-     * @param array<TNormalizedKey, TValue> $data
+     * @phpstan-param array<key-of<TVal>&lowercase-string, value-of<TVal>> $data
+     * @param TVal $data
      */
     public function __unserialize(array $data): void
     {
         $this->data = [];
         foreach ($data as $key => $value) {
             if (!is_string($key)) {
-                $key = (string) $key;
+                $key = (string)$key;
             }
             /**
-             * @var TNormalizedKey $key
+             * @var key-of<TVal> $key
              */
             $key = strtolower($key);
             $this->data[$key] = $value;
@@ -381,7 +395,8 @@ class LazyFetchObject implements IteratorAggregate, ArrayAccess, Serializable, J
     /**
      * Serialize the object to a JSON-serializable value.
      *
-     * @return array<TNormalizedKey, TValue>
+     * @phpstan-return array<key-of<TVal>&lowercase-string, value-of<TVal>>
+     * @return TVal
      */
     public function jsonSerialize(): array
     {

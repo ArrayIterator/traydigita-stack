@@ -28,7 +28,9 @@ use TrayDigita\WP\Stack\Source\Components\Provider\JetpackPhoton;
 use TrayDigita\WP\Stack\Source\Components\Security\Hash;
 use TrayDigita\WP\Stack\Source\Components\Utils\Filter;
 use TrayDigita\WP\Stack\Source\Components\Utils\Resolver;
+use TrayDigita\WP\Stack\Source\Exceptions\RuntimeException;
 use TrayDigita\WP\Stack\Source\Interfaces\Collections\SingletonInterface;
+use TrayDigita\WP\Stack\Source\Libs\Collections\RegistryDefinitions\Value;
 
 /**
  * The main stack class for managing components.
@@ -65,7 +67,7 @@ final class Stack implements SingletonInterface
     {
         self::$instance = $this;
         $this->components = new Components();
-        $this->components->set(__CLASS__, $this);
+        $this->components->set(self::class, Value::create($this), true);
     }
 
     /**
@@ -137,263 +139,276 @@ final class Stack implements SingletonInterface
      * Get an instance of a component class.
      * @template T of object
      * @param class-string<T> $class The class name of the component to retrieve.
-     * @return T|null The instance of the requested component class.
+     * @return T The instance of the requested component class.
      */
-    private function getOfInstance(string $class): ?object
+    private function instanceComponent(string $class): object
     {
         $obj = $this->components->get($class);
-        return $obj instanceof $class ? $obj : null;
+        if (!$obj instanceof $class) {
+            throw new RuntimeException(sprintf('Component of class %s is not available.', $class));
+        }
+        return $obj;
     }
 
     /**
      * Get the manifest assets component
      *
-     * @return ManifestAssets|null
+     * @return ManifestAssets
      */
-    public function getManifestAssets(): ?ManifestAssets
+    public function getManifestAssets(): ManifestAssets
     {
-        return $this->getOfInstance(ManifestAssets::class);
+        return $this->instanceComponent(ManifestAssets::class);
     }
 
     /**
      * Get the stateless authenticator component
      *
-     * @return StatelessAuthenticator|null
+     * @return Stack
      */
-    public function getStatelessAuthenticator(): ?StatelessAuthenticator
+    public function getStack() : self
     {
-        return $this->getOfInstance(StatelessAuthenticator::class);
+        return $this->instanceComponent(self::class);
+    }
+
+    /**
+     * Get the stateless authenticator component
+     *
+     * @return StatelessAuthenticator
+     */
+    public function getStatelessAuthenticator(): StatelessAuthenticator
+    {
+        return $this->instanceComponent(StatelessAuthenticator::class);
     }
 
     /**
      * Get the TOTP component
      *
-     * @return Totp|null
+     * @return Totp
      */
-    public function getTotp(): ?Totp
+    public function getTotp(): Totp
     {
-        return $this->getOfInstance(Totp::class);
+        return $this->instanceComponent(Totp::class);
     }
 
     /**
      * Get the time records component
      *
-     * @return TimeRecords|null
+     * @return TimeRecords
      */
-    public function getTimeRecords(): ?TimeRecords
+    public function getTimeRecords(): TimeRecords
     {
-        return $this->getOfInstance(TimeRecords::class);
+        return $this->instanceComponent(TimeRecords::class);
     }
 
     /**
      * Get the site options component
      *
-     * @return SiteOptions|null
+     * @return SiteOptions
      */
-    public function getSiteOptions(): ?SiteOptions
+    public function getSiteOptions(): SiteOptions
     {
-        return $this->getOfInstance(SiteOptions::class);
+        return $this->instanceComponent(SiteOptions::class);
     }
 
     /**
      * Get the site transients component
      *
-     * @return SiteTransients|null
+     * @return SiteTransients
      */
-    public function getSiteTransients(): ?SiteTransients
+    public function getSiteTransients(): SiteTransients
     {
-        return $this->getOfInstance(SiteTransients::class);
+        return $this->instanceComponent(SiteTransients::class);
     }
 
     /**
      * Get the site component
      *
-     * @return Site|null
+     * @return Site
      */
-    public function getSite(): ?Site
+    public function getSite(): Site
     {
-        return $this->getOfInstance(Site::class);
+        return $this->instanceComponent(Site::class);
     }
 
     /**
      * Get the WPDB component
      *
-     * @return WPDB|null
+     * @return WPDB
      */
-    public function getWPDB(): ?WPDB
+    public function getWPDB(): WPDB
     {
-        return $this->getOfInstance(WPDB::class);
+        return $this->instanceComponent(WPDB::class);
     }
 
     /**
      * Get the WordPress database component
      *
-     * @return WordPressDatabase|null
+     * @return WordPressDatabase
      */
-    public function getWordPressDatabase(): ?WordPressDatabase
+    public function getWordPressDatabase(): WordPressDatabase
     {
-        return $this->getOfInstance(WordPressDatabase::class);
+        return $this->instanceComponent(WordPressDatabase::class);
     }
 
     /**
      * Get the database component
      *
-     * @return Database|null
+     * @return Database
      */
-    public function getDatabase(): ?Database
+    public function getDatabase(): Database
     {
-        return $this->getOfInstance(Database::class);
+        return $this->instanceComponent(Database::class);
     }
 
     /**
      * Get the default datetime zone component
      *
-     * @return DatetimeZoneDefault|null
+     * @return DatetimeZoneDefault
      */
-    public function getDatetimeZoneDefault(): ?DatetimeZoneDefault
+    public function getDatetimeZoneDefault(): DatetimeZoneDefault
     {
-        return $this->getOfInstance(DatetimeZoneDefault::class);
+        return $this->instanceComponent(DatetimeZoneDefault::class);
     }
 
     /**
      * Get the extensions component
      *
-     * @return Extensions<\TrayDigita\WP\Stack\Source\Components\Extensions\Abstracts\AbstractExtension>|null
+     * @return Extensions<\TrayDigita\WP\Stack\Source\Components\Extensions\Abstracts\AbstractExtension>
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */
-    public function getExtensions(): ?Extensions
+    public function getExtensions(): Extensions
     {
-        return $this->getOfInstance(Extensions::class);
+        return $this->instanceComponent(Extensions::class);
     }
 
     /**
      * Get the user factory component
      *
-     * @return UserFactory|null
+     * @return UserFactory
      */
-    public function getUserFactory(): ?UserFactory
+    public function getUserFactory(): UserFactory
     {
-        return $this->getOfInstance(UserFactory::class);
+        return $this->instanceComponent(UserFactory::class);
     }
 
     /**
      * Get the logger component
      *
-     * @return Logger|null
+     * @return Logger
      */
-    public function getLogger(): ?Logger
+    public function getLogger(): Logger
     {
-        return $this->getOfInstance(Logger::class);
+        return $this->instanceComponent(Logger::class);
     }
 
     /**
      * Get the log aware component
      *
-     * @return LogAware<\Psr\Log\LoggerInterface>|null
+     * @return LogAware<\Psr\Log\LoggerInterface>
      * @noinspection PhpFullyQualifiedNameUsageInspection
      */
-    public function getLogAware(): ?LogAware
+    public function getLogAware(): LogAware
     {
-        return $this->getOfInstance(LogAware::class);
+        return $this->instanceComponent(LogAware::class);
     }
 
     /**
      * Get the client browser type component
      *
-     * @return ClientBrowserType|null
+     * @return ClientBrowserType
      */
-    public function getClientBrowserType(): ?ClientBrowserType
+    public function getClientBrowserType(): ClientBrowserType
     {
-        return $this->getOfInstance(ClientBrowserType::class);
+        return $this->instanceComponent(ClientBrowserType::class);
     }
 
     /**
      * Get the Cloudflare component
      *
-     * @return Cloudflare|null
+     * @return Cloudflare
      */
-    public function getCloudflare(): ?Cloudflare
+    public function getCloudflare(): Cloudflare
     {
-        return $this->getOfInstance(Cloudflare::class);
+        return $this->instanceComponent(Cloudflare::class);
     }
 
     /**
      * Get the IP component
      *
-     * @return Ip|null
+     * @return Ip
      */
-    public function getIp(): ?Ip
+    public function getIp(): Ip
     {
-        return $this->getOfInstance(Ip::class);
+        return $this->instanceComponent(Ip::class);
     }
 
     /**
      * Get the user agent component
      *
-     * @return UserAgent|null
+     * @return UserAgent
      */
-    public function getUserAgent(): ?UserAgent
+    public function getUserAgent(): UserAgent
     {
-        return $this->getOfInstance(UserAgent::class);
+        return $this->instanceComponent(UserAgent::class);
     }
 
     /**
      * Get the user agent generator component
      *
-     * @return UserAgentGenerator|null
+     * @return UserAgentGenerator
      */
-    public function getUserAgentGenerator(): ?UserAgentGenerator
+    public function getUserAgentGenerator(): UserAgentGenerator
     {
-        return $this->getOfInstance(UserAgentGenerator::class);
+        return $this->instanceComponent(UserAgentGenerator::class);
     }
 
     /**
      * Get the Jetpack Photon provider component
      *
-     * @return JetpackPhoton|null
+     * @return JetpackPhoton
      */
-    public function getJetpackPhoton(): ?JetpackPhoton
+    public function getJetpackPhoton(): JetpackPhoton
     {
-        return $this->getOfInstance(JetpackPhoton::class);
+        return $this->instanceComponent(JetpackPhoton::class);
     }
 
     /**
      * Get the hash component
      *
-     * @return Hash|null
+     * @return Hash
      */
-    public function getHash(): ?Hash
+    public function getHash(): Hash
     {
-        return $this->getOfInstance(Hash::class);
+        return $this->instanceComponent(Hash::class);
     }
 
     /**
      * Get the resolver component
      *
-     * @return Resolver|null
+     * @return Resolver
      */
-    public function getResolver(): ?Resolver
+    public function getResolver(): Resolver
     {
-        return $this->getOfInstance(Resolver::class);
+        return $this->instanceComponent(Resolver::class);
     }
 
     /**
      * Get the filter component
      *
-     * @return Filter|null
+     * @return Filter
      */
-    public function getFilter(): ?Filter
+    public function getFilter(): Filter
     {
-        return $this->getOfInstance(Filter::class);
+        return $this->instanceComponent(Filter::class);
     }
 
     /**
      * Get the popular posts component
      *
-     * @return PopularPosts|null
+     * @return PopularPosts
      */
-    public function getPopularPosts(): ?PopularPosts
+    public function getPopularPosts(): PopularPosts
     {
-        return $this->getOfInstance(PopularPosts::class);
+        return $this->instanceComponent(PopularPosts::class);
     }
 }
