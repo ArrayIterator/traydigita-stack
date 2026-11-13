@@ -278,7 +278,6 @@ class ParseDown
     public function text(string $text): string
     {
         $Elements = $this->textElements($text);
-
         # convert to markup
         $markup = $this->elements($Elements);
 
@@ -2123,17 +2122,15 @@ class ParseDown
         if ($this->safeMode) {
             $Element = $this->sanitiseElement($Element);
         }
-
         # identity map if element has no handler
         $Element = $this->handle($Element);
 
-        $hasName = isset($Element['name']);
-
+        $tagName = is_string($Element['name'] ?? null) && $Element['name'] !== '' ? $Element['name'] : null;
+        $tagName = $tagName ? strtolower(trim($tagName)) : null;
+        $tagName = $tagName ?: null;
         $markup = '';
-
-        if ($hasName) {
-            $markup .= '<' . $Element['name'];
-
+        if ($tagName) {
+            $markup .= "<$tagName";
             if (isset($Element['attributes'])) {
                 foreach ($Element['attributes'] as $name => $value) {
                     if ($value === null) {
@@ -2146,7 +2143,6 @@ class ParseDown
         }
 
         $permitRawHtml = false;
-
         if (isset($Element['text'])) {
             $text = $Element['text'];
         } elseif (isset($Element['rawHtml'])) {
@@ -2155,12 +2151,12 @@ class ParseDown
             $text = $Element['rawHtml'];
             $allowRawHtmlInSafeMode = isset($Element['allowRawHtmlInSafeMode']) && $Element['allowRawHtmlInSafeMode'];
             $permitRawHtml = !$this->safeMode || $allowRawHtmlInSafeMode;
+        } else {
+            $text = null;
         }
-
         $hasContent = isset($text) || isset($Element['element']) || isset($Element['elements']);
-
-        if ($hasContent && isset($text)) {
-            $markup .= $hasName ? '>' : '';
+        if ($hasContent) {
+            $markup .= $tagName ? '>' : '';
             if (isset($Element['elements'])) {
                 $markup .= $this->elements($Element['elements']);
             } elseif (isset($Element['element'])) {
@@ -2172,13 +2168,22 @@ class ParseDown
                     $markup .= $text;
                 }
             }
-
-            $markup .= $hasName ? '</' . $Element['name'] . '>' : '';
-        } elseif ($hasName) {
-            $markup .= ' />';
+            $markup .= $this->closeElement($tagName);
+        } elseif ($tagName) {
+            $markup .= $this->closeElement($tagName);
         }
-
         return $markup;
+    }
+
+    protected function closeElement(mixed $tagName): string
+    {
+        if (!is_string($tagName) || $tagName === '') {
+            return '';
+        }
+        if (in_array($tagName, $this->voidElements)) {
+            return '/>';
+        }
+        return "</$tagName>";
     }
 
     /** @param list<array<string, mixed>> $Elements */
@@ -2187,16 +2192,13 @@ class ParseDown
         $markup = '';
 
         $autoBreak = true;
-
         foreach ($Elements as $Element) {
-            if (empty($Element)) {
+            if (empty($Element) || !is_array($Element)) {
                 continue;
             }
-
             $autoBreakNext = ($Element['autobreak'] ?? isset($Element['name']));
             // (autobreak === false) covers both sides of an element
             $autoBreak = !$autoBreak ? $autoBreak : $autoBreakNext;
-
             $markup .= ($autoBreak ? "\n" : '') . $this->element($Element);
             $autoBreak = $autoBreakNext;
         }

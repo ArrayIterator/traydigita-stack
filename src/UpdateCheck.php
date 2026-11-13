@@ -51,7 +51,8 @@ class UpdateCheck
     /**
      * The URL for the plugin's changelog on GitHub.
      */
-    public const string CHANGELOG_URL = 'https://github.com/ArrayIterator/traydigita-stack/tree/{tag}/CHANGELOG.md';
+    public const string CHANGELOG_URL =
+        'https://raw.githubusercontent.com/ArrayIterator/traydigita-stack/refs/tags/{tag}/CHANGELOG.md';
 
     // demo
     // public const string CHANGELOG_URL =
@@ -412,7 +413,7 @@ class UpdateCheck
         self::$pluginChangelogTags[$tag] = $body;
         try {
             return ParseDown::instance()->text($body);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
             return null;
         }
     }
