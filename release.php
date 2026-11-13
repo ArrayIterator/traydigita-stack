@@ -10,6 +10,7 @@ declare(strict_types=1);
     $dirPlugin = 'traydigita-stack';
     $includes = [
         'src',
+        'languages',
         'vendor',
         '.htaccess',
         'index.php',

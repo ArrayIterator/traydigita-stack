@@ -13,6 +13,8 @@
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Requires at least: 6.0
  * Requires PHP: 8.3
+ * Text Domain: traydigita-stack
+ * Domain Path: /languages
  */
 
 if (!defined('ABSPATH')) {
@@ -21,6 +23,16 @@ if (!defined('ABSPATH')) {
 
 (function () {
 
+    /**
+     * wp cli translation command:
+     * ```bash
+     * wp i18n make-pot ./ languages/traydigita-stack.pot --domain=traydigita-stack --include="traydigita-stack.php,src/" --allow-root
+     * ```
+     * Gen mo:
+     * ```bash
+     * wp i18n make-mo languages/traydigita-stack-id_ID.po languages/traydigita-stack-id_ID.mo
+     * ```
+     */
     // check if using CLI and execute current script is in this directory
     if (in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
         $scriptName = $_SERVER['SCRIPT_FILENAME'] ?? $_SERVER['SCRIPT_NAME'] ?? '';
@@ -50,7 +62,6 @@ if (!defined('ABSPATH')) {
         return; // Exit if PHP version is lower than 8.3
     }
 
-
     if (file_exists(__DIR__ . '/vendor/autoload.php')) {
         require __DIR__ . '/vendor/autoload.php';
     } else {
@@ -68,8 +79,11 @@ if (!defined('ABSPATH')) {
             }
         });
     }
+
     // Register the update check hooks
-    add_action('plugins_loaded', function () {
+    add_action('plugins_loaded', static function () {
+        // load plugin text domain
+        load_plugin_textdomain('traydigita-stack', false, dirname(plugin_basename(__FILE__)) . '/languages');
         if (class_exists(TrayDigita\WP\Stack\Source\UpdateCheck::class)) {
             add_filter(
                 'pre_set_site_transient_update_plugins',

@@ -109,6 +109,35 @@ abstract class WordPressTableView extends \WP_List_Table
             'ajax' => false,
             'screen' => $screen ?: $page_hook,
         ]);
+        $this->titles = [
+            'id' => __('ID', 'traydigita-stack'),
+            'uuid' => __('UUID', 'traydigita-stack'),
+            'title' => __('Title', 'traydigita-stack'),
+            'message' => __('Message', 'traydigita-stack'),
+            'messenger_id' => __('Sender Id', 'traydigita-stack'),
+            'target_url' => __('Target URL', 'traydigita-stack'),
+            'status' => __('Status', 'traydigita-stack'),
+            'response_data' => __('Response', 'traydigita-stack'),
+            'created_at' => __('Created At', 'traydigita-stack')
+        ];
+        $this->descriptions = [
+            'id' => 'The unique identifier for the notification.',
+            'uuid' => 'The universally unique identifier for the notification.',
+            'title' => 'The title of the notification.',
+            'message' => 'The message content of the notification.',
+            'messenger_id' => 'The ID of the sender of the notification.',
+            'target_url' => 'The URL to which the user will be redirected when clicking the notification.',
+            'status' => 'The delivery status (e.g., success or failed).',
+            'response_data' => 'The raw JSON response data returned from the Firebase server.',
+            'created_at' => 'The exact timestamp when the notification record was created.'
+        ];
+        $this->actionLabels = [
+            'success' => __('Success', 'traydigita-stack'),
+            'failed' => __('Failed', 'traydigita-stack'),
+            'all' => __('All', 'traydigita-stack'),
+            'open_link' => __('Open Link', 'traydigita-stack'),
+            'delete' => __('Delete', 'traydigita-stack')
+        ];
     }
 
     /**

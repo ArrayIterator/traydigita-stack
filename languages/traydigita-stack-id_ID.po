@@ -1,0 +1,141 @@
+# Copyright (C) 2026 TrayDigita
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: TrayDigita Stack 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/traydigita-stack\n"
+"Last-Translator: ArrayIterator <arrayiterator@gmail.com>\n"
+"Language-Team: TrayDigita <team@traydigita.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-13T00:54:39+00:00\n"
+"PO-Revision-Date: 2026-11-13T00:54:39+00:00\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: traydigita-stack\n"
+
+#. Plugin Name of the plugin
+#: traydigita-stack.php
+msgid "TrayDigita Stack"
+msgstr "TrayDigita Stack"
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: traydigita-stack.php
+msgid "https://www.traydigita.com"
+msgstr "https://www.traydigita.com"
+
+#. Description of the plugin
+#: traydigita-stack.php
+msgid "A WordPress plugin that provides a set of tools and utilities for developers to enhance"
+msgstr "Plugin WordPress yang menyediakan seperangkat alat dan utilitas untuk pengembang untuk meningkatkan pengalaman pengembangan"
+
+#. Author of the plugin
+#: traydigita-stack.php
+msgid "TrayDigita"
+msgstr "TrayDigita"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:520
+msgid "FCM credentials not ready"
+msgstr "Kredensial FCM belum siap"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:532
+msgid "Invalid token, token is empty"
+msgstr "Token tidak valid, token kosong"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:544
+msgid "No valid topics provided"
+msgstr "Tidak ada topik valid yang diberikan"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:666
+msgid "The topics are invalid"
+msgstr "Topik-topik tersebut tidak valid"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:674
+msgid "The topic are empty"
+msgstr "Topik kosong"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:683
+msgid "The topic length are mismatched"
+msgstr "Panjang topik tidak sesuai"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:689
+msgid "Too many topics"
+msgstr "Terlalu banyak topik"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:1059
+msgid "OpenSSL Library has not found"
+msgstr "Pustaka OpenSSL tidak ditemukan"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:1066
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:1074
+msgid "Google FCM credentials data has invalid"
+msgstr "Data kredensial Google FCM tidak valid"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:1126
+msgid "OpenSSL Library can not signing private key"
+msgstr "Pustaka OpenSSL tidak dapat menandatangani kunci privat"
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:1160
+msgid "Invalid access token response"
+msgstr "Respons token akses tidak valid"
+
+#: src/Libs/Messaging/WordPressTableView.php:113
+msgid "ID"
+msgstr "ID"
+
+#: src/Libs/Messaging/WordPressTableView.php:114
+msgid "UUID"
+msgstr "UUID"
+
+#: src/Libs/Messaging/WordPressTableView.php:115
+msgid "Title"
+msgstr "Judul"
+
+#: src/Libs/Messaging/WordPressTableView.php:116
+msgid "Message"
+msgstr "Pesan"
+
+#: src/Libs/Messaging/WordPressTableView.php:117
+msgid "Sender Id"
+msgstr "ID Pengirim"
+
+#: src/Libs/Messaging/WordPressTableView.php:118
+msgid "Target URL"
+msgstr "URL Tujuan"
+
+#: src/Libs/Messaging/WordPressTableView.php:119
+msgid "Status"
+msgstr "Status"
+
+#: src/Libs/Messaging/WordPressTableView.php:120
+msgid "Response"
+msgstr "Respons"
+
+#: src/Libs/Messaging/WordPressTableView.php:121
+msgid "Created At"
+msgstr "Dibuat Pada"
+
+#: src/Libs/Messaging/WordPressTableView.php:135
+msgid "Success"
+msgstr "Berhasil"
+
+#: src/Libs/Messaging/WordPressTableView.php:136
+msgid "Failed"
+msgstr "Gagal"
+
+#: src/Libs/Messaging/WordPressTableView.php:137
+msgid "All"
+msgstr "Semua"
+
+#: src/Libs/Messaging/WordPressTableView.php:138
+msgid "Open Link"
+msgstr "Buka Tautan"
+
+#: src/Libs/Messaging/WordPressTableView.php:139
+msgid "Delete"
+msgstr "Hapus"
+
+#: traydigita-stack.php:45
+msgid "TrayDigita Stack requires PHP version 8.3 or higher. Please update your PHP version."
+msgstr "TrayDigita Stack memerlukan PHP versi 8.3 atau lebih tinggi. Silakan perbarui versi PHP Anda."

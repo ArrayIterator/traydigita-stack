@@ -100,6 +100,8 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
 
     public const string ERROR_INVALID_OPERATION = 'ERROR_INVALID_OPERATION';
 
+    public const string ERROR_INVALID_PARAM = 'ERROR_INVALID_PARAM';
+
     /**
      * @var array{
      *     type: string,
@@ -513,7 +515,10 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
     public function subscribeTokenToTopic(mixed $token, string $topic, string ...$topics): array|WP_Error
     {
         if (!$this->isOk()) {
-            return new WP_Error('not_ready', 'FCM credentials not ready');
+            return new WP_Error(
+                self::ERROR_NOT_READY,
+                __('FCM credentials not ready', 'traydigita-stack')
+            );
         }
 
         $access_token = $this->getAccessToken();
@@ -524,7 +529,7 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
         array_unshift($topics, $topic);
         $token = trim((string)$token);
         if ($token === '') {
-            return new WP_Error('invalid_param', 'Invalid token, token is empty');
+            return new WP_Error(self::ERROR_INVALID_PARAM, __('Invalid token, token is empty', 'traydigita-stack'));
         }
 
         $valid_topics = [];
@@ -536,7 +541,7 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
         }
 
         if (empty($valid_topics)) {
-            return new WP_Error('invalid_param', 'No valid topics provided');
+            return new WP_Error(self::ERROR_INVALID_PARAM, __('No valid topics provided', 'traydigita-stack'));
         }
 
         $url = 'https://iid.googleapis.com/iid/v1:batchAdd';
@@ -658,7 +663,7 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
             if (!is_array($topic)) {
                 return new WP_Error(
                     self::ERROR_INVALID_TOPIC,
-                    'The topics are invalid'
+                    __('The topics are invalid', 'traydigita-stack')
                 );
             }
             $topics = array_filter($topic, 'is_string');
@@ -666,7 +671,7 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
             if (empty($topics)) {
                 return new WP_Error(
                     self::ERROR_INVALID_TOPIC,
-                    'The topic are empty'
+                    __('The topic are empty', 'traydigita-stack')
                 );
             }
             $topics = array_values($topics);
@@ -675,13 +680,13 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
             if (count($topics) !== count($new_topics)) {
                 return new WP_Error(
                     self::ERROR_INVALID_TOPIC,
-                    'The topic length are mismatched'
+                    __('The topic length are mismatched', 'traydigita-stack')
                 );
             }
             if (count($new_topics) > 10) {
                 return new WP_Error(
                     self::ERROR_INVALID_TOPIC,
-                    'Too many topics'
+                    __('Too many topics', 'traydigita-stack')
                 );
             }
             if (count($new_topics) === 1) {
@@ -897,7 +902,7 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
         return array_slice($topics, 0, 10);
     }
 
-    public function __get(string $name) : mixed
+    public function __get(string $name): mixed
     {
         return property_exists(
             $this,
@@ -916,7 +921,7 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
      */
     public static function siteTopic(?Site $site = null): string
     {
-        $site_url = ($site??Stack::getInstance()->getSite())->siteUrl;
+        $site_url = ($site ?? Stack::getInstance()->getSite())->siteUrl;
         $host = parse_url($site_url, PHP_URL_HOST);
         if (!$host) {
             preg_match('~^https?://([^/]+)(/|$)~', $site_url, $match);
@@ -1051,14 +1056,14 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
         if (!function_exists('openssl_sign')) {
             return new WP_Error(
                 self::ERROR_NOT_READY,
-                'OpenSSL Library has not found'
+                __('OpenSSL Library has not found', 'traydigita-stack')
             );
         }
 
         if (!$this->isOk()) {
             return new WP_Error(
                 self::ERROR_NOT_READY,
-                'Google FCM credentials data has invalid'
+                __('Google FCM credentials data has invalid', 'traydigita-stack')
             );
         }
         $clientEmail = $this->getClientEmail();
@@ -1066,7 +1071,7 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
         if (!$clientEmail || !$privateKey) {
             return new WP_Error(
                 self::ERROR_NOT_READY,
-                'Google FCM credentials data has invalid'
+                __('Google FCM credentials data has invalid', 'traydigita-stack')
             );
         }
         $cacheKey = sprintf('fcm_token_%s', sha1($clientEmail . '::' . $privateKey));
@@ -1118,7 +1123,7 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
         if (!$signatureResult) {
             return new WP_Error(
                 self::ERROR_INVALID_OPERATION,
-                'OpenSSL Library can not signing private key'
+                __('OpenSSL Library can not signing private key', 'traydigita-stack')
             );
         }
         $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
@@ -1152,7 +1157,7 @@ final class FirebaseMessagingEasy extends FirebaseMessagingUtil implements JsonS
         }
         return is_string($access_token) ? $access_token : new WP_Error(
             self::ERROR_INVALID_RESPONSE,
-            'Invalid access token response'
+            __('Invalid access token response', 'traydigita-stack')
         );
     }
 

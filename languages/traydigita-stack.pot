@@ -1,0 +1,141 @@
+# Copyright (C) 2026 TrayDigita
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: TrayDigita Stack 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/traydigita-stack\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-13T00:54:39+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: traydigita-stack\n"
+
+#. Plugin Name of the plugin
+#: traydigita-stack.php
+msgid "TrayDigita Stack"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: traydigita-stack.php
+msgid "https://www.traydigita.com"
+msgstr ""
+
+#. Description of the plugin
+#: traydigita-stack.php
+msgid "A WordPress plugin that provides a set of tools and utilities for developers to enhance"
+msgstr ""
+
+#. Author of the plugin
+#: traydigita-stack.php
+msgid "TrayDigita"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:520
+msgid "FCM credentials not ready"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:532
+msgid "Invalid token, token is empty"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:544
+msgid "No valid topics provided"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:666
+msgid "The topics are invalid"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:674
+msgid "The topic are empty"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:683
+msgid "The topic length are mismatched"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:689
+msgid "Too many topics"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:1059
+msgid "OpenSSL Library has not found"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:1066
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:1074
+msgid "Google FCM credentials data has invalid"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:1126
+msgid "OpenSSL Library can not signing private key"
+msgstr ""
+
+#: src/Libs/Messaging/FirebaseMessagingEasy.php:1160
+msgid "Invalid access token response"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:113
+msgid "ID"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:114
+msgid "UUID"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:115
+msgid "Title"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:116
+msgid "Message"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:117
+msgid "Sender Id"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:118
+msgid "Target URL"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:119
+msgid "Status"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:120
+msgid "Response"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:121
+msgid "Created At"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:135
+msgid "Success"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:136
+msgid "Failed"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:137
+msgid "All"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:138
+msgid "Open Link"
+msgstr ""
+
+#: src/Libs/Messaging/WordPressTableView.php:139
+msgid "Delete"
+msgstr ""
+
+#: traydigita-stack.php:45
+msgid "TrayDigita Stack requires PHP version 8.3 or higher. Please update your PHP version."
+msgstr ""
