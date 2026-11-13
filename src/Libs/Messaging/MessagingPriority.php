@@ -6,7 +6,6 @@ namespace TrayDigita\WP\Stack\Source\Libs\Messaging;
 use function in_array;
 use function is_array;
 use function strtolower;
-use function strtoupper;
 
 class MessagingPriority
 {
