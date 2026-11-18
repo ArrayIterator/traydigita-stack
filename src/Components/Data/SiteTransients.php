@@ -92,7 +92,9 @@ final class SiteTransients implements TransientOptionInterface, RegistryComponen
             if (!$value instanceof TransientData
                 || $value->expired
             ) {
-                $this->delete($key);
+                if (isset($this->options)) {
+                    $this->delete($key);
+                }
                 unset($options[$key]);
             }
         }
@@ -113,7 +115,9 @@ final class SiteTransients implements TransientOptionInterface, RegistryComponen
             if (!$value instanceof TransientData
                 || $value->expired
             ) {
-                $this->delete($key);
+                if (isset($this->options)) {
+                    $this->delete($key);
+                }
                 unset($transients[$key]);
                 continue;
             }
@@ -136,7 +140,9 @@ final class SiteTransients implements TransientOptionInterface, RegistryComponen
         $value = $this->getOption($name, $default);
         if ($value instanceof TransientData) {
             if ($value->expired) {
-                $this->delete($name);
+                if (isset($this->options)) {
+                    $this->delete($name);
+                }
                 return $default;
             }
             return $value->getValue();
