@@ -52,7 +52,7 @@ final class PopularPosts
      * @param Database $database The Database instance for database interactions.
      * @param Site $site The Site instance representing the site for which popular posts are being collected.
      */
-    private function __construct(
+    public function __construct(
         Database $database,
         Site $site
     ) {
