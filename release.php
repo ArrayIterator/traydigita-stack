@@ -9,6 +9,7 @@ declare(strict_types=1);
     $releaseDir = __DIR__ . DIRECTORY_SEPARATOR . 'releases';
     $dirPlugin = 'traydigita-stack';
     $includes = [
+        'compat',
         'src',
         'languages',
         'vendor',
