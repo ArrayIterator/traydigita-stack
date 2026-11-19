@@ -259,7 +259,7 @@ class SiteKitGoogle extends AbstractsAnalytics
                     'post_name__in' => array_keys($paths),
                     'post_type' => 'any',
                     'post_status' => 'publish',
-                    'posts_per_page' => -1,
+                    'posts_per_page' => count($paths),
                 ]);
                 $maps = [];
                 foreach ($posts as $post) {

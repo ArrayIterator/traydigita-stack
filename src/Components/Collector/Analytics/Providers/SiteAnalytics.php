@@ -411,12 +411,13 @@ HTML;
     ): array {
         $this->createTable();
         $post_ids = $this->getPopularPostIdsFromDaysInterval($days, $limit, $force);
+        $limit = (int) min($limit, self::MAX_LIMIT);
         $posts = [];
         foreach (PostUtil::find([
             'include' => array_keys($post_ids),
             'post_type' => 'post',
             'post_status' => 'publish',
-            'limit' => -1,
+            'limit' => $limit,
         ]) as $post) {
             $posts[$post->ID] = [
                 'post' => $post,
