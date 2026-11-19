@@ -58,7 +58,7 @@
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
-    "autoload-dev": {
+    "autoload": {
         "psr-4": {
             "TrayDigita\\WP\\Stack\\Source\\": "src/"
         },
