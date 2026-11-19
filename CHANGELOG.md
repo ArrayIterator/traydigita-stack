@@ -4,3 +4,7 @@
 
 - Initial release of the Traydigita Stack plugin.
 - Added core functionalities and features.
+
+> 1.0.1
+
+- Add remove cleanup xml-link onf symbol def

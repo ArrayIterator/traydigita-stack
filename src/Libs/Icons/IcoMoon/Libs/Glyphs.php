@@ -124,7 +124,7 @@ final class Glyphs implements JsonSerializable, Stringable, ExportableInterface,
             $prefixId .= '-';
         }
         foreach ($this->glyphs as $glyph) {
-            $html .= $glyph->toSymbol(['id' => sprintf('%s%s', $prefixId, $glyph->extras->name)]);
+            $html .= $glyph->toSymbol(['id' => sprintf('%s%s', $prefixId, $glyph->extras->name)], true);
         }
         if (!isset($attributes['style'])) {
             $attributes['style'] = 'display:none';
