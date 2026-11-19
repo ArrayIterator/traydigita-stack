@@ -8,3 +8,5 @@
 > 1.0.1
 
 - Add remove cleanup xml-link onf symbol def
+- Fixed minor bugs and improved performance.
+- Fix analytics tracking issue.
