@@ -5,6 +5,7 @@ namespace TrayDigita\WP\Stack\Source\Components\Data;
 
 use TrayDigita\WP\Stack\Source\Libs\Helpers\DataFilter;
 use TrayDigita\WP\Stack\Source\Libs\Helpers\Hook;
+use TrayDigita\WP\Stack\Source\Libs\Helpers\Is;
 use TrayDigita\WP\Stack\Source\Libs\Resolver\ThemeDirUrl;
 use WP_Theme;
 use function defined;
@@ -154,7 +155,7 @@ class Site
     ) {
         // @phpstan-ignore-next-line
         $this->isDevelopment = defined('WP_DEBUG') && \WP_DEBUG
-            || defined('TRAYDIGITA_DEVELOPMENT') && \TRAYDIGITA_DEVELOPMENT === true;
+            || defined('TRAYDIGITA_DEVELOPMENT') && Is::true(\TRAYDIGITA_DEVELOPMENT);
         $this->setDistributionPath('dist');
         Hook::add('switch_theme', [$this, 'switchThemeHook'], 10, 2);
     }

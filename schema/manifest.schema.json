@@ -41,6 +41,29 @@
                 }
             }
         },
+        "css": {
+            "type": "object",
+            "description": "An object containing the unminified and minified versions of the CSS file.",
+            "additionalProperties": false,
+            "properties": {
+                "unminified": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": ".+\\.css$"
+                    },
+                    "description": "The unminified version of the CSS file."
+                },
+                "minified": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": ".+\\.min\\.css$"
+                    },
+                    "description": "The minified version of the CSS file."
+                }
+            }
+        },
         "isEntry": {
             "type": "boolean",
             "description": "Indicates whether the asset is an entry point."

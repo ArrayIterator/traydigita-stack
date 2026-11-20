@@ -81,11 +81,12 @@ final class Hook
      * Check if the action has been registered
      *
      * @param string $action The action name to check
+     * @param callable|null $callback The callback function to check (optional)
      * @return bool True if the action has been registered, false otherwise
      */
-    public static function has(string $action) : bool
+    public static function has(string $action, ?callable $callback = null) : bool
     {
-        return (bool) has_action($action);
+        return (bool) has_action($action, $callback??false);
     }
 
     /**

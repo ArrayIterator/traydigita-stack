@@ -38,4 +38,14 @@ class EnvironmentAssets extends AbstractManifestAssets
             $this->addAsset($a);
         }
     }
+
+    /**
+     * Get the collections of assets
+     *
+     * @return array<string, EnvironmentAsset<T>>
+     */
+    public function getCollections(): array
+    {
+        return $this->collections;
+    }
 }

@@ -22,6 +22,8 @@ class MergedAsset extends AbstractManifestAsset
      * @param string $baseName
      * @param string|null $unminifiedFile
      * @param string|null $minifiedFile
+     * @param string[] $unminifiedCSS
+     * @param string[] $minifiedCSS
      */
     public function __construct(
         MergedAssets $assets,
@@ -32,7 +34,9 @@ class MergedAsset extends AbstractManifestAsset
         bool $isEntry,
         public readonly string $baseName,
         public readonly ?string $unminifiedFile = null,
-        public readonly ?string $minifiedFile = null
+        public readonly ?string $minifiedFile = null,
+        public readonly array $unminifiedCSS = [],
+        public readonly array $minifiedCSS = []
     ) {
         parent::__construct($assets, ManifestAssetType::MERGE, $id, $name, $file, $src, $isEntry);
     }
@@ -58,6 +62,10 @@ class MergedAsset extends AbstractManifestAsset
             'isEntry' => $this->isEntry,
             'baseName' => $this->baseName,
             'files' => $files,
+            'css' => [
+                'unminified' => $this->unminifiedCSS,
+                'minified' => $this->minifiedCSS,
+            ],
         ];
     }
 }
