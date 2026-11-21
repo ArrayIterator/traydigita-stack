@@ -81,7 +81,8 @@ class ManifestAssets
      * @param string $file The path to the manifest file to be parsed.
      * @param string $jsonAsAlternate The path to the alternate
      * JSON manifest file to be used if the primary file is not valid.
-     * @return ?array<array-key, mixed> The parsed content of the manifest file as an associative array, or null if parsing fails.
+     * @return ?array<array-key, mixed> The parsed content of the manifest
+     * file as an associative array, or null if parsing fails.
      */
     protected function parseFileAssets(string $file, string $jsonAsAlternate): ?array
     {
